@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫族将軍道 — NEKOZOKU SHŌGUNDŌ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cinzel:wght@400;500;700&family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+JP:wght@200;300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────── */
+:root{
+  --bg:        #06060e;
+  --bg2:       #0b0b18;
+  --gold:      #c8ab6a;
+  --gold-dim:  #7d6840;
+  --gold-pale: #f0dfa8;
+  --gold-glow: rgba(200,171,106,.22);
+  --violet:    #8955be;
+  --violet-lo: rgba(137,85,190,.06);
+  --teal:      #38b8b8;
+  --teal-lo:   rgba(56,184,184,.05);
+  --text:      #dfd5c2;
+  --text-dim:  #887d6c;
+  --rule:      rgba(200,171,106,.15);
+  --em:        #a8d0d0;
+  --r:         .4rem;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:clamp(17px,1.45vw,21px);
+  line-height:1.95;
+  overflow-x:hidden;
+}
+
+/* ── NOISE LAYER ────────────────────────────── */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='.032'/%3E%3C/svg%3E");
+  opacity:.65;
+}
+
+/* ── PROGRESS ───────────────────────────────── */
+#prog{
+  position:fixed;top:0;left:0;height:2px;width:0%;z-index:300;
+  background:linear-gradient(90deg,var(--teal),var(--violet),var(--gold));
+  box-shadow:0 0 12px rgba(137,85,190,.6);
+  transition:width .07s linear;
+}
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+.hero{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:80px 40px 100px;
+  overflow:hidden;
+}
+
+/* radial glow behind title */
+.hero::after{
+  content:"";position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-55%);
+  width:80vmax;height:60vmax;
+  background:radial-gradient(ellipse,rgba(137,85,190,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+/* SVG ring arcs */
+.hero-rings{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;overflow:hidden;
+}
+.hero-rings svg{
+  width:140vmax;height:140vmax;
+  opacity:.055;
+  animation:ringSpin 120s linear infinite;
+}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+
+/* stacked kanji — LARGE background ghost */
+.hero-kanji-bg{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:"Noto Serif JP",serif;
+  font-weight:700;
+  font-size:clamp(180px,30vw,360px);
+  line-height:1;
+  letter-spacing:-.02em;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(200,171,106,.06);
+  text-stroke:1px rgba(200,171,106,.06);
+  user-select:none;pointer-events:none;
+  white-space:nowrap;
+}
+
+/* foreground label */
+.hero-label{
+  font-family:"Cinzel",serif;
+  font-size:clamp(9px,.9vw,11px);
+  letter-spacing:.6em;
+  color:var(--gold-dim);
+  opacity:.75;
+  margin-bottom:clamp(16px,2.5vw,28px);
+  position:relative;z-index:1;
+  animation:fadeUp .9s .1s ease both;
+}
+
+/* THE MAIN JAPANESE TITLE */
+.hero-jp{
+  font-family:"Noto Serif JP",serif;
+  font-weight:700;
+  font-size:clamp(48px,9vw,128px);
+  line-height:1;
+  letter-spacing:.1em;
+  background:linear-gradient(160deg,var(--gold-pale) 0%,var(--gold) 45%,#a07828 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 40px rgba(200,171,106,.4)) drop-shadow(0 0 80px rgba(137,85,190,.15));
+  position:relative;z-index:1;
+  margin-bottom:clamp(14px,2vw,24px);
+  animation:fadeUp 1.1s .2s ease both;
+}
+
+/* romanisation */
+.hero-roman{
+  font-family:"Cinzel Decorative",serif;
+  font-size:clamp(12px,1.6vw,18px);
+  letter-spacing:.28em;
+  color:var(--gold);
+  text-shadow:0 0 40px rgba(200,171,106,.2);
+  position:relative;z-index:1;
+  margin-bottom:clamp(24px,4vw,44px);
+  animation:fadeUp .9s .45s ease both;
+}
+
+/* gem rule */
+.hero-rule{
+  display:flex;align-items:center;gap:14px;
+  width:clamp(180px,28vw,340px);
+  margin:0 auto clamp(20px,3vw,32px);
+  position:relative;z-index:1;
+  animation:fadeUp .8s .6s ease both;
+}
+.hero-rule::before,.hero-rule::after{
+  content:"";flex:1;height:1px;
+}
+.hero-rule::before{background:linear-gradient(90deg,transparent,var(--gold-dim))}
+.hero-rule::after{background:linear-gradient(90deg,var(--gold-dim),transparent)}
+.hero-gem{
+  width:8px;height:8px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  box-shadow:0 0 16px rgba(200,171,106,.8);
+  flex-shrink:0;
+}
+
+.hero-book{
+  font-family:"EB Garamond",serif;font-style:italic;
+  font-size:clamp(13px,1.4vw,17px);
+  color:var(--text-dim);letter-spacing:.07em;
+  position:relative;z-index:1;
+  margin-bottom:8px;
+  animation:fadeUp .8s .72s ease both;
+}
+.hero-tagline{
+  font-family:"Cinzel",serif;
+  font-size:clamp(8px,.75vw,10px);
+  letter-spacing:.6em;color:var(--teal);opacity:.55;
+  position:relative;z-index:1;
+  animation:fadeUp .8s .85s ease both;
+}
+
+/* scroll indicator */
+.hero-scroll{
+  position:absolute;bottom:44px;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  opacity:.35;z-index:1;
+  animation:fadeUp .8s 1.2s ease both, scrollPulse 2.6s 2s ease-in-out infinite;
+}
+.hero-scroll span{
+  font-family:"Cinzel",serif;font-size:8px;
+  letter-spacing:.5em;color:var(--gold-dim);
+}
+.hero-scroll-line{
+  width:1px;height:48px;
+  background:linear-gradient(to bottom,var(--gold-dim),transparent);
+}
+@keyframes scrollPulse{
+  0%,100%{transform:translateX(-50%) translateY(0);opacity:.35}
+  50%{transform:translateX(-50%) translateY(10px);opacity:.2}
+}
+
+/* ══════════════════════════════════════════════
+   CHAPTER HEADER
+══════════════════════════════════════════════ */
+.ch-header{
+  position:relative;z-index:10;
+  text-align:center;
+  padding:clamp(60px,8vw,110px) 24px clamp(40px,5vw,70px);
+  border-top:1px solid var(--rule);
+  background:linear-gradient(to bottom,var(--bg) 0%,transparent 100%);
+}
+.ch-eyebrow{
+  font-family:"Cinzel",serif;
+  font-size:clamp(8px,.8vw,10px);letter-spacing:.6em;
+  color:var(--teal);opacity:.75;margin-bottom:18px;
+}
+.ch-title{
+  font-family:"Cinzel",serif;font-weight:500;
+  font-size:clamp(20px,2.8vw,34px);letter-spacing:.2em;
+  color:var(--text);
+}
+
+/* ══════════════════════════════════════════════
+   PROSE
+══════════════════════════════════════════════ */
+.prose{
+  position:relative;z-index:10;
+  max-width:700px;margin:0 auto;
+  padding:0 clamp(20px,5vw,60px) clamp(80px,10vw,160px);
+  animation:fadeUp 1s .15s ease both;
+}
+
+p{margin-bottom:1.55em;text-align:justify;hyphens:auto}
+
+/* Drop cap */
+.prose > p:first-of-type::first-letter{
+  font-family:"Cinzel",serif;font-weight:700;
+  font-size:4.8em;line-height:.72;
+  float:left;margin:.06em .09em -.02em 0;
+  color:var(--gold);
+  text-shadow:0 0 28px rgba(200,171,106,.35);
+}
+
+em{color:var(--em);font-style:italic}
+
+/* Scene break */
+.scene-break{
+  text-align:center;margin:clamp(34px,4vw,54px) 0;
+  position:relative;
+}
+.scene-break::before,.scene-break::after{
+  content:"";position:absolute;top:50%;
+  width:calc(50% - 26px);height:1px;
+}
+.scene-break::before{left:0;background:linear-gradient(90deg,transparent,var(--gold-dim))}
+.scene-break::after{right:0;background:linear-gradient(90deg,var(--gold-dim),transparent)}
+.scene-break span{
+  font-family:"Cinzel",serif;font-size:10px;
+  letter-spacing:.3em;color:var(--gold-dim);opacity:.5;
+  position:relative;z-index:1;padding:0 9px;background:var(--bg);
+}
+
+/* Section break */
+.section-break{
+  text-align:center;
+  margin:clamp(60px,8vw,100px) 0 clamp(40px,5vw,70px);
+  position:relative;
+}
+.section-break::before,.section-break::after{
+  content:"";position:absolute;top:50%;
+  width:calc(50% - 115px);height:1px;background:var(--rule);
+}
+.section-break::before{left:0}.section-break::after{right:0}
+.section-break span{
+  font-family:"Cinzel",serif;font-weight:700;
+  font-size:clamp(8px,.8vw,10px);letter-spacing:.5em;
+  color:var(--gold);opacity:.72;
+  position:relative;z-index:1;padding:0 18px;background:var(--bg);
+}
+
+/* Chapter end */
+.ch-end{
+  text-align:center;
+  padding:clamp(60px,8vw,100px) 0 clamp(40px,5vw,60px);
+  border-top:1px solid var(--rule);
+  margin-top:clamp(40px,5vw,60px);
+}
+.ch-end .kanji{
+  font-family:"Noto Serif JP",serif;font-weight:300;
+  font-size:clamp(18px,2.5vw,28px);
+  letter-spacing:.3em;color:var(--gold-dim);opacity:.55;
+  margin-bottom:16px;
+}
+.ch-end .cont{
+  font-family:"EB Garamond",serif;font-style:italic;
+  font-size:clamp(14px,1.3vw,17px);
+  color:var(--text-dim);letter-spacing:.06em;
+}
+
+/* ── FOOTER ─────────────────────────────────── */
+footer{
+  position:relative;z-index:10;
+  text-align:center;padding:40px 24px;
+  border-top:1px solid var(--rule);
+  font-size:clamp(10px,.85vw,12px);
+  color:var(--text-dim);opacity:.4;
+  font-style:italic;line-height:1.85;
+}
+
+/* ── BACK TO TOP ─────────────────────────────── */
+#btt{
+  position:fixed;bottom:36px;right:36px;
+  width:44px;height:44px;
+  background:rgba(11,11,24,.92);
+  border:1px solid var(--gold-dim);
+  color:var(--gold);
+  font-family:"Cinzel",serif;font-size:16px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s,border-color .2s,background .2s;
+  z-index:50;text-decoration:none;
+  backdrop-filter:blur(10px);
+}
+#btt.show{opacity:1;transform:translateY(0)}
+#btt:hover{background:rgba(200,171,106,.08);border-color:var(--gold)}
+
+/* ── ANIMATIONS ─────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(26px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.ch-header{animation:fadeUp 1s ease both}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media(max-width:500px){
+  body{font-size:16px}
+  .hero{padding:60px 24px 80px;min-height:90vh}
+  .hero-kanji-bg{font-size:clamp(120px,45vw,200px)}
+  #btt{bottom:20px;right:20px}
+}
+
+.char-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200,171,106,.35);
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.char-link:hover {
+  border-color: rgba(200,171,106,.8);
+  color: #e8d5a0;
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<section class="hero">
+
+  <div class="hero-rings">
+    <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tamashii ring arcs -->
+      <ellipse cx="400" cy="400" rx="370" ry="148" stroke="#c8ab6a" stroke-width="1" transform="rotate(-28 400 400)"/>
+      <ellipse cx="400" cy="400" rx="300" ry="118" stroke="#38b8b8" stroke-width=".6" transform="rotate(18 400 400)"/>
+      <ellipse cx="400" cy="400" rx="230" ry="88"  stroke="#8955be" stroke-width=".5" transform="rotate(-8 400 400)"/>
+      <!-- star dots -->
+      <circle cx="210" cy="160" r="1.2" fill="#c8ab6a" opacity=".6"/>
+      <circle cx="590" cy="130" r=".8"  fill="#38b8b8" opacity=".5"/>
+      <circle cx="660" cy="520" r="1"   fill="#c8ab6a" opacity=".4"/>
+      <circle cx="140" cy="580" r=".9"  fill="#8955be" opacity=".4"/>
+      <circle cx="400" cy="80"  r="1.4" fill="#c8ab6a" opacity=".7"/>
+      <circle cx="720" cy="330" r=".7"  fill="#38b8b8" opacity=".3"/>
+    </svg>
+  </div>
+
+  <!-- ghost kanji behind -->
+  <div class="hero-kanji-bg" aria-hidden="true">猫族将軍道</div>
+
+  <p class="hero-label">猫族将軍道</p>
+  <h1 class="hero-jp">猫族将軍道</h1>
+  <p class="hero-roman">NEKOZOKU SHŌGUNDŌ</p>
+
+  <div class="hero-rule"><div class="hero-gem"></div></div>
+
+  <p class="hero-book">Book One &nbsp;·&nbsp; The Weight of Regret</p>
+  <p class="hero-tagline">The Way of the Cat Civilization Shogun</p>
+
+  <div class="hero-scroll">
+    <span>begin</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+
+</section>
+
+<!-- ══ CHAPTER HEADER ═════════════════════════════ -->
+<div class="ch-header">
+  <p class="ch-eyebrow">Chapter One</p>
+  <h2 class="ch-title">Kahvan&#x2011;Da</h2>
+</div>
+
+<!-- ══ PROSE ══════════════════════════════════════ -->
+<main class="prose">
+<p>The blue-white star sits hard and direct overhead, no atmosphere thick enough to soften it. The light doesn't warm — it exposes. Every edge of their armor catches it differently, the white plate throwing back sharp angles of blue-white while the gold trim holds a deeper, richer answer to the same source.</p>
+<p>They stopped at the crest of the rise.</p>
+<p>Below and ahead, the hangar sat in the middle distance — its open doors wide enough to swallow a city block, the interior darkness breathing cool shadow into the hard afternoon. The structure was vast in the way that things built for ships are vast. Not impressive. Just large, the way a fact is large.</p>
+<p>Between them and it: thirty meters of flat rocky ground, alien scrub flattened by the same wind that was now kicking dust into slow spirals at their feet.</p>
+<p>Nothing moved down there.</p>
+<p>Which was the problem.</p>
+<p>Her hands were at the grips — the twin pommels sitting just above each shoulder, close enough that drawing them would look, to anyone watching, as though she were simply reaching for her ears — but the blades were still in their trans-dimensional scabbards, still on the other side of the threshold, waiting. Beside her <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> stood with the same stillness, her weight distributed across both feet, Jinsei not yet summoned, the air around her hip carry assembly undisturbed.</p>
+<p>They watched the ground between them and the hangar.</p>
+<p>The breeze kicked across the rocky flat in a low swirl — dust and fragments of dried alien scrub rising in a slow spiral, drifting past them and settling somewhere else.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>'s voice was quiet. Conversational. The way she said things when she already knew the answer and was asking anyway.</p>
+<p>"And... you are sure this is the right place?"</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>'s head moved a fraction of a degree. The slight angle that meant she had looked. The stillness that followed meant she had decided not to say something about it.</p>
+<p>A beat. The dust swirled again. Went nowhere.</p>
+<p>"Of course it is the right place."</p>
+<p>Still not turning her head. Her voice carrying the particular dryness of someone who had never once in her life needed to raise it.</p>
+<p>"Would I ever take you to a party at which no one arrived?"</p>
+<div class="scene-break"><span>◆</span></div>
+<p>Then the light changed.</p>
+<p>Not the sun — the interior of the hangar. Something activated in the shadow beyond those massive doors, a mechanical initialization cycling through its startup sequence, and for a moment the darkness inside resolved into shapes. Angular. Deliberate. The red glowing optical sensors of Lycan cyborg troopers coming online in the shadows, eleven pairs of lights brightening from nothing to full intensity like a row of stars being born in the wrong direction.</p>
+<p>Above them, at the upper edges of the hangar doors, two hoverdrones detached from their docking positions and began their descent into the hard afternoon light. Their sensor arrays swept forward. Their weapons systems initialized. Their targeting solutions began to calculate.</p>
+<p>And behind the troopers, deeper in the shadow — the crimson on black of the DarkPack banners hanging loose in the still air.</p>
+<p>Not a frontier ambush. Not hired muscle. Not pirates or border raiders taking advantage of a lightly defended world.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> knew they were coming.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> had been waiting.</p>
+<p>He knew better than to be here personally.</p>
+<p>Not now. Not yet.</p>
+<p>The two sisters stood thirty meters away from all of this and neither of them moved.</p>
+<p>Then <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> spoke. Quietly. The same conversational register she used for everything, in the way that people speak who have decided something and no longer need to perform the deciding.</p>
+<p>"Let us greet our hosts, sister. They seem eager to meet our blades."</p>
+<p>Her hands moved.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>Not fast — <em>certain.</em> Both hands rising to the pommels just above each shoulder — the way you reach for something you have reached for ten thousand times, fingertips finding the grips with the ease of long memory.</p>
+<p>Zero left the left scabbard first. The upward draw converted directly into the launch angle — the blade spiraling away from her left shoulder on the exact trajectory she had already calculated, climbing toward the drone's undercarriage before her hands had fully completed their reach.</p>
+<p>Ichi came out on the second step.</p>
+<p>The right-hand draw arc came down and inward — a chopping diagonal slice from above the shoulder driving toward the center, the dimensional energy blazing to life at the exact moment the blade crossed the threshold. The two closest troopers walked into it. They did not walk out of it.</p>
+<p>The third received a low horizontal swipe before it had finished processing what happened to the second — Ichi sweeping at knee height with the clean economy of someone who had already decided where the floor was going to be.</p>
+<p>The fourth was raising something when <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> left the ground.</p>
+<p>The leap was short. The ascending slice was not — Ichi coming up from below and through, the teal and violet spectrum bright in the alien light, the geometry of the problem resolved at the apex of her arc.</p>
+<p>She landed gently. The way a cat lands.</p>
+<p>Her left hand came up open.</p>
+<p>Above her, Zero had drawn its vaporized line across the drone's undercarriage and the machine was already bending as the blade slowed at its apex — then fell, rotating on its axis like a sakura petal finding its way down, the spectrum trailing behind each revolution like a memory of the climb.</p>
+<p>It settled grip-first into her open left hand.</p>
+<p>She had not looked up once.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>On <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>'s side, Jinsei came up in a single rising arc — the green dissolution boiling the dry afternoon air, the three meters of jade-dark blade humming at a frequency the ground registered before anyone standing on it did.</p>
+<p>The four troopers between her and the second drone were in the way.</p>
+<p>Then they weren't.</p>
+<p>The upstroke continued through the drone without slowing — each half spinning away in its own direction. The blade's momentum carried it through the apex and began its natural arc downward, the dissolution trailing behind it like a flag finding its position. Jinsei settled across her back — not resting on anything, the biological energy holding it elevated, suspended in its own quiet field, the tip barely off the ground, patient and waiting. Her right hand remained on the grip, lightly, the way you keep contact with something that doesn't need you but that you're not quite ready to stop touching.</p>
+<p>In the moment her left hand was free, it found the edge of the emerald mask.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>Zero settled grip-first into <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>'s open left palm as <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> peeled the emerald mask from her face and the drone halves struck the ground.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>Both sisters stood in the settling dust.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> looked at the aftermath. The bent halves. The quiet already returning to the desert floor between them and the hangar doors.</p>
+<p>"Was that really supposed to be an ambush?"</p>
+<p>Direct. Genuinely curious.</p>
+<p>"Or did we catch them at something?"</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> turned toward the hangar doors. The combat tension released all at once and the next step forward carried it — knees unbending, weight transferring upward for a single stride, tail lifting, shoulders dropping a fraction. The armor caught the light differently in that step.</p>
+<p>To anyone who had spent sixteen years watching her move, it read as joy.</p>
+<p>"The answers are inside, lil' kitten."</p>
+<p>The smile was behind the mask. <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> knew it was there the way she knew everything about her sister — not by seeing it but by the particular quality of the silence that surrounded it.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> reached up and pulled the white Noh mask from her face.</p>
+<p>The smile was exactly where <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> knew it would be.</p>
+<p>"After you, Princess."</p>
+<p>She did not say anything about it.</p>
+<p>She walked through the doors.</p>
+<div class="scene-break"><span>◆</span></div>
+<div class="section-break"><span>THE HANGAR</span></div>
+<p>The interior was vast in a different way than the exterior had suggested.</p>
+<p>Outside, the hangar was a fact — large, industrial, present. Inside, it was a <em>condition.</em> The blue-white starlight cut through the open doors in hard diagonal shafts, catching dust particles that had been disturbed by recent activity and not yet settled, throwing long shadows from the skeletal remains of docking equipment stripped of anything useful. The ceiling disappeared into shadow forty meters up. The floor was dark polished industrial composite, giving back a faint grey-blue reflection of the space above wherever the light touched it.</p>
+<p>Four skyships were docked in various states of preparation — two being loaded, cargo manifests still active on the terminal screens and containers half-secured to frames; one with its access ramp down; one stripped of its port engine assembly entirely, the cavity in its hull filled with shadow where the machinery should have been.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> moved through the doorway first, Jinsei suspended in its dissolution field at her hip, her mask held loose in her left hand. She stopped three paces in and turned slowly, taking the full geometry of the space.</p>
+<p>"They were loading," she said. Not a question.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> came through behind her, both blades still drawn, the teal and violet spectrum casting faint dimensional light on the floor around her feet. She moved along the right wall, not toward the ships, reading the perimeter first. The way she had been taught. The way she had taught <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>.</p>
+<p>"Three manifests still active," she said, glancing at the terminal screens without approaching them. "They expected to finish loading and leave."</p>
+<p>"Before us."</p>
+<p>"Before us."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> drifted toward the nearest skyship — the one with the ramp down — right hand still resting on Jinsei's grip, the blade suspended patient and elevated behind her. The dissolution at Jinsei's edge drifted upward in a slow curl, reading the air the way it sometimes did when something had recently passed through a space.</p>
+<p>"Someone was here recently," she said. "Within the last turn."</p>
+<p>"Someone <em>left</em> recently," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. Not a correction — a distinction. She had moved to the loading terminal and was reading the manifest without touching it. "These containers. Look at the labeling."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> came to stand beside her. She looked at the manifest. Then at <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>.</p>
+<p>"DarkPack operational prefix on a civilian freight circuit."</p>
+<p>"Yes."</p>
+<p>"That is either very careless or very deliberate."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> did not answer immediately. Her eyes moved through the manifest with the particular quality they had when she was reading something that required more than reading — parsing the shape of information as much as its content, the way a document is built as much as what it says.</p>
+<p>The destination codes were there. Commercial routing. Standard freight classifications. And beneath them — the names. Suppliers. Distributors. Trade houses. A chain of commercial relationships that read, on the surface, like a perfectly normal cargo manifest for a perfectly normal freight operation.</p>
+<p>Except she knew those names.</p>
+<p>Every one of them was a Nekozoku commercial entity. Trading houses, supply brokers, distribution networks that ran through the legitimate commerce of the Shogunate's frontier circuits. Names her own trade commissioners would recognize. Names that appeared in the quarterly supply registers. Names that had, at some point along the chain, touched DarkPack-adjacent commercial operations in ways the manifest made look deliberate.</p>
+<p>Made look like collaboration.</p>
+<p>She read it twice. The stillness that settled over her was not the stillness of someone assembling information. It was the stillness of someone who had just understood what they were holding and why it had been left where they would find it.</p>
+<p>"They stripped their own ship," <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said, from the engine cavity. She had crouched beside it, examining the floor without touching anything. Tool marks. Compression scarring. Fast work, not careful. She looked up. "Purpose-built concealment. The equipment <em>was</em> the housing." A pause. "They built this specifically. This was not improvised."</p>
+<p>"No," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "It was not."</p>
+<p>None of it was.</p>
+<p>Not the active manifests that had conveniently not been shut down. Not the routing codes that were just visible enough to follow. Not the names — carefully selected Nekozoku merchants sitting in a chain of commercial distance from the DarkPack, close enough to look compromised, far enough that proving they were not would take paths of careful, quiet investigation that could not be made public without straining every trade relationship in the frontier alliance.</p>
+<p>The trap was not the ambush outside.</p>
+<p>The ambush outside was the distraction from the trap.</p>
+<p>"<a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> stood. Looked at her.</p>
+<p>"We have what <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> intended us to find," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. Her voice carried the particular flatness it had when she had arrived somewhere she did not want to be and was being precise about it anyway. "He is not here. The operation is not here. What is here is what he chose to leave."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> looked at the manifest screens. At the names <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> had been reading. She understood immediately — she had grown up in the same intelligence environment, had learned the same things from the same teachers, had the same instincts for the shape of a planted trail.</p>
+<p>"He is pointing us at our own people," she said.</p>
+<p>"He is pointing us at the <em>appearance</em> of our own people," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "Which is considerably more useful to him than pointing us at his."</p>
+<p>The hangar was quiet around them. Something dripped somewhere in the dark — a coolant line, or condensation from a seal. The sound of an empty place that had been recently and deliberately arranged.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> looked at the stripped engine cavity. At the DarkPack banners. At the manifests still running on terminals that had not been shut down because they were not supposed to be shut down.</p>
+<p>"He won this round," she said.</p>
+<p>It was not a question.</p>
+<p>"He won this round," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> confirmed.</p>
+<p>She looked at the manifest one more time. Committed every name to memory with the particular thoroughness she gave to things she intended to handle carefully and quietly, in her own time, without giving <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> the satisfaction of watching her react.</p>
+<p>Then she turned toward the doors.</p>
+<p>"We are done here," she said. "We take nothing. We give him nothing. We came, we read what he wrote for us, and we leave."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> fell into step beside her.</p>
+<p>"And the names?" <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said quietly.</p>
+<p>"Are a problem for paths from now," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said, "handled so quietly that no one who matters sees us handling it. Which is exactly what <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> calculated we would have to do." A beat. "He is not wrong. He is also not finished."</p>
+<p>They walked back out through the doors into the hard blue-white light.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>She turned toward the doors.</p>
+<p>Outside, the hard blue-white light waited on the alien ground.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> sheathed Ichi first — the blade finding the scabbard mouth above her right shoulder, the teal-violet spectrum dimming as it crossed back into dimensional space. Zero followed into the left. The pommels settled above her shoulders, just out of sight, just within reach.</p>
+<p>She waited.</p>
+<p>Beside her, <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> returned Jinsei to its carry assembly — the dimensional crack that always accompanied that particular transition, the three meters of jade-dark blade compressing with a sound like the air closing a decision. The green dissolution dimmed to nothing.</p>
+<p>They looked at each other.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> reached up with her right hand and twisted Ichi's grip — a single precise quarter turn.</p>
+<p>The response was immediate and total.</p>
+<p>Space tore.</p>
+<p>Not a door. Not a flash. A <em>rip</em> — visible from every angle simultaneously, as if the air itself had been seized from behind and pulled inward. For a fraction of a second something that was not light and not darkness reached out from the rip and took them. Then the alien ground was simply empty, the rip fading into a slow residual impression — an afterimage processed in reverse by anyone watching, the absence understood before the motion that caused it.</p>
+<p>In the corridor outside the east wing of the Tamashii palace, the air split for the same fraction of a second and pushed them out the other side. The teal-violet and living green faded from the polished stone floor as the weapons released their hold on the dimensional path.</p>
+<p>Mu was sitting at the end of the corridor.</p>
+<p>Waiting.</p>
+<div class="scene-break"><span>◆</span></div>
+<div class="section-break"><span>THE DINNER</span></div>
+<p>The table had been set for twelve but only five of them sat down to it initially — <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> at the head, <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> on her left, <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> across, <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> down the right side, <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> beside Byakko in the position that was always Arashi's at these gatherings whether or not anyone had assigned it to her. The state dinner guests would arrive for the second course. The first course was theirs.</p>
+<p>Mu had settled on the cushion beside <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>'s place at the start of the turn and had not moved from it. This was entirely normal. Mu went where Byakko went and occupied the available surface with the unquestioning authority of a cat that had been doing this for longer than the palace had been standing.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> set aside the white Noh mask — within reach, because it was always within reach — and looked at <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a>.</p>
+<p>"Your assessment of the Kahvan-Da encounter," she said.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> had a data surface open beside her plate — barely visible, its light dimmed to almost nothing for the social register of the setting. She had been reading it since before the others sat down.</p>
+<p>"The facility was operational as a transfer waystation for at least twelve turns before our arrival," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said.</p>
+<p>"And I completely annihilated four cyborgs AND a battledrone in ONE stroke while—"</p>
+<p>"<a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>'s voice. The single word — sharp and firm, not loud, not unkind, simply the sound of a door closing on a particular kind of behavior that had no business in this room. <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>'s mouth closed. She sat slightly straighter and reached for her wine with the expression of someone who had just remembered where she was and what that required of her.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> continued, as if none of this had happened, which was the correct response.</p>
+<p>"The DarkPack chose it specifically for its commercial cover — a working skyship hangar on a registered freight circuit, unremarkable in the traffic logs. The transfer mechanism was clean. Cargo arrived disguised as standard commercial freight, was processed through the facility, and departed under a different manifest classification. The engine cavity was the most recent extraction — the cargo had been concealed inside the assembly for transit and removed on-site."</p>
+<p>"Destination," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"Leerma. Which we now understand as an extraction point rather than a delivery point. They were not sending something to Leerma — they were using it as the next stage of the operation." <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> paused. "The dimensional resonance signature in the Blue Pepper crop is what they want. The crop itself is incidental."</p>
+<p>"The Kahvan-Da facility itself," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "Status."</p>
+<p>"Abandoned. They cleared it within hours of our arrival. The active manifests were a residual — the system had not yet updated to reflect the extraction completion when we arrived. Another two chords and there would have been nothing to read."</p>
+<p>"We were expected," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. It was not a question.</p>
+<p>"You were expected," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> confirmed. "The trap was not intended to succeed. It was intended to delay."</p>
+<p>The table absorbed this.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> had been listening with his elbows on the table and his wine glass held in both hands — the posture he used when he was thinking rather than speaking and wanted the room to understand the distinction.</p>
+<p>"Delay is interesting," he said. "A trap designed to kill you ends the problem. One designed to delay you buys time for something else to complete." He set down the wine glass. "Whatever they were finishing at Kahvan-Da — the trap was cover for its completion. They needed time to clear the facility and move the extraction."</p>
+<p>"To whatever comes after Leerma," <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said.</p>
+<p>No one called her name this time.</p>
+<p>"Leerma is a stage," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said. "The extraction moves through stages. Kahvan-Da told us the mechanism. It did not tell us the destination."</p>
+<p>"<a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a>," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>The name landed on the table with the particular weight it always carried in this room — not fear, not anger. Recognition.</p>
+<p>"The operational sophistication is consistent with DarkPack command-level planning," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. "The resonance extraction technology specifically — that is not frontier raiding. That is a directed research program. Someone understood what they were looking for before they looked for it."</p>
+<p>"<a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> understood," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said. "Whatever Rex found at the end of the Hope encounter — whatever that contact gave him before it severed — it was enough to know what to look for. He has been looking ever since."</p>
+<p>"Through Lycan Galactic Pack infrastructure," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said carefully. "Some of the routing on the manifest codes traces back through commercial nodes adjacent to Galactic Pack logistics networks. Not inside them. Adjacent."</p>
+<p>"The Galactic Pack government does not know," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"My assessment," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> confirmed. "<a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> is using the infrastructure without their knowledge or consent. Which is consistent with everything we know about how he operates — inside Lycan civilization enough to use its systems, outside it enough to deny accountability."</p>
+<p>"The armistice holds," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said.</p>
+<p>"For now," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. "The Lycan government's investment in it remains genuine. <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a>'s operations are a problem they are aware of and have not resolved — which is different from endorsing them."</p>
+<p>"Not yet," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said.</p>
+<p>"Not yet."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> looked at her plate. Then at <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> had eaten through the entire exchange with the focused efficiency of someone who had been present at a great many debriefs over a very long time and had learned that the food did not wait for the intelligence to finish.</p>
+<p>"The engagement itself," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "Your assessment."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> set down her utensil. She looked at <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a>. Then at <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a>. Then back at her plate.</p>
+<p>"Fourteen troopers. Two drones." She picked up her utensil again. "No damage sustained."</p>
+<p>A beat.</p>
+<p>"They are getting better."</p>
+<p>No one asked who she meant. The ambiguity was the point.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> looked at <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>. Byakko looked at her wine glass. <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> looked at <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>, who was eating.</p>
+<p>The first course concluded.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>The state dinner guests arrived with the second course — the particular social chemistry of a larger table replacing the tight operational register of the debrief with something looser, warmer, less precise.</p>
+<p>"The eastern resettlement numbers came in this arc," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said, to no one in particular. "Third consecutive age of positive migration. The colonies are drawing population again."</p>
+<p>"That is what happens," <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said, "when the colonies are safe enough to draw population."</p>
+<p>"That is what happens when people believe they will stay safe." <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> reached for his wine. "Belief and safety are not the same thing but they produce similar behavior in the short term."</p>
+<p>"You are in a philosophical mood," <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said.</p>
+<p>"I am in a realistic mood. There is a difference."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> lasted approximately two chords before she found herself in conversation with <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> about dimensional resonance calibration in the outer ring stabilizers, which drifted toward the history of the fold network, and from there toward the broken star roads.</p>
+<p>"The broken road to the Outer Kesshari system has been inactive for three hundred ages," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> was saying. "The station at the Kesshari Lagrange point failed — a cascade in the fold mechanism that no one has been able to fully diagnose. The system is still inhabited. They are simply unreachable by conventional fold."</p>
+<p>"They have conventional skyship transit," <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said.</p>
+<p>"At the distances involved that means contact once or twice a path at best. An inhabited system effectively cut off from the civilization because one station failed." <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> paused. "There are seven other broken roads in the current network. Kesshari is the most inhabited. The others are research outposts, uninhabited relay points, and one that was a colony two hundred ages ago and is now simply dark."</p>
+<p>"Dark," <a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> said.</p>
+<p>"We lost contact two hundred ages ago. The road broke. No ship has made the conventional journey to verify what is there because no ship can be spared for a transit of that duration to verify the status of a colony that the official record lists as dark."</p>
+<p>The word landed quietly.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> looked at <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a>. "You have a theory."</p>
+<p>"I have a suspicion," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. "Which is different. Theories require data. Suspicions require only pattern recognition and sufficient experience of how things go wrong."</p>
+<p>"And what does your suspicion say."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> looked at her wine glass. "That it did not go dark on its own."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> held this.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a>, who had been listening from across the table, said — very quietly — "Which system."</p>
+<p>"The Oumura system," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. "Outer frontier. Historically Usagizoku research territory — three institutions, two colonies, one library of considerable significance to dimensional scholarship."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> looked at <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> was already looking at the commissioner.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>The Blue Pepper glaze on the third course protein was exceptional.</p>
+<p>Three people reached for it with small sounds of appreciation. <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> noted each of them.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>, beside her, very quietly: "The last supply arrived fourteen turns ago. The kitchen master has been rationing."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> looked at the dish.</p>
+<p>"Who authorized it."</p>
+<p>"She did. Independently. On the grounds that she did not know when the next delivery would arrive."</p>
+<p>"She was correct."</p>
+<p>"Yes," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said. "She was."</p>
+<p>They did not say anything more about it. The third course continued.</p>
+<p>Mu licked one paw three times. Set it down. Lifted his head, flicked the right ear once, and looked directly at the far end of the table.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>'s four ears perked — the feline pair sharpening their angle by a fraction, the human pair following without thinking. She had already been listening. Now she was listening with purpose.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>Four courses later the trade commissioner from the outer colony circuit — a small precise Usagi with the slightly distracted air of someone who spent most of his time thinking about logistics — was in quiet conversation with the palace's chief of domestic affairs.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> had already isolated his words from the ambient noise of twelve conversations and was pulling them apart with the patient precision of a being built to hear prey at distance.</p>
+<p>She set down her wine glass.</p>
+<p>"Banking Commissioner Feelon, of House Ikko, Third Reagent to the Royal Emperor of the Usagizoku."</p>
+<p>The table did not go entirely quiet. But the radius immediately around the commissioner contracted into stillness as <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>'s gaze arrived across the table with the particular quality it had when the politeness was entirely genuine and the weight behind it was entirely not.</p>
+<p>"You will provide me with the name of this supplier."</p>
+<p>The tone was a request. The eyes removed any doubt about what it was.</p>
+<p>The commissioner gave it. Clearly. The way one gives information to someone who has just made the nature of the exchange unmistakable.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> held it for a moment — not repeating it, not writing it, simply taking it in the way she took all information that mattered. Then she looked at the Blue Pepper component on the dish in front of her — the last of the Leerma supply, rationed by a kitchen master who had understood without being told that something had changed.</p>
+<p>"Thank you," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>The commissioner reached for his wine with the expression of someone who had been briefly and completely seen by something much larger than a dinner conversation and was not entirely certain what had happened.</p>
+<div class="scene-break"><span>◆</span></div>
+<p>The Seiryū diplomatic attaché told a story about a translation algorithm and a formal treaty document midway through the final course. He was three sentences in when he realized the Nekozoku at the table were already laughing — which meant the story had traveled here before him, which made the whole thing funnier, which made him laugh at his own story, which was the best possible outcome for a diplomatic dinner.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> laughed. Genuinely. The kind that reaches the eyes.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> watched this with the expression she wore when she was filing something away.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yuki','https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644');return false;">Yuki</a> caught it. Looked at <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>. Arashi met her eyes for a moment and looked away.</p>
+<p>That was the whole of it.</p>
+<p>The dinner ended. The guests dispersed. The amber lanterns in the corridor dimmed as the second rest began.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> walked to her study.</p>
+<p>She placed three intelligence reports on the desk. Raids on frontier supply networks. Each one dismissed as DarkPack opportunism. Each one unconnected in the official record.</p>
+<p>She read them in silence.</p>
+<p>Then:</p>
+<p>"It could only be someone with a stupid dog name like <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a>. So of course. It is Rex."</p>
+<p>Mu walked across the reports. Sat down in front of her face. Violet eyes, very still. The gold collar catching the amber light.</p>
+<p>The slow blink was very slow.</p>
+<div class="scene-break"><span>◆</span></div>
+<div class="section-break"><span>INTELLIGENCE</span></div>
+<p>The briefing room at the start of the next turn had the particular atmosphere of a space in which important and unpleasant things were routinely made precise.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> was already present when <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> arrived — seated at the far end of the long table, white robes luminous in the cool even light, a data surface open before her displaying a network map that resolved and reresolved as the intelligence systems updated their connections in real time.</p>
+<p>"The Leerma silence is six turns old," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. "Not three. The official dispatch log shows three. The actual signal analysis shows six. Someone edited the record."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> settled into the chair at the head of the table. "Someone with access to the dispatch archive."</p>
+<p>"Someone with access and reason. The editing is clean but not invisible — whoever did it was working quickly rather than carefully. Which suggests they were more concerned with the immediate problem of the record than with the long-term problem of discovery."</p>
+<p>"Which means they expected the silence to end before anyone looked too carefully."</p>
+<p>"Or they expected the silence to become permanent and the record to stop mattering." <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> paused. "I think the latter."</p>
+<p>The door opened.</p>
+<p>They came in together, the way they always came in — a single threshold crossed by three bodies moving as one considered unit.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a> first — the gold blindfold in place, her recurved bow unstrung at her back. Two auburn tails trailing behind her, their tips faintly luminous with the golden perception energy that meant Techū was aware and reading the room. The two tails were not decoration — they were function. Each carried its own dimensional frequency, slightly different from the other, and the interference pattern between them gave Mine a form of dimensional depth perception no single-tailed being could achieve. Two reception points, triangulating the same signal from fractionally different positions. She perceived the briefing room not as a physical space but as a map of how matter moved through dark energy within it — every person a shape, every data system a frequency, every edited record a wrong note in the information architecture.</p>
+<p>She had known about the fourth colony before the briefing began.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a> a half step behind — the navy cord binding at her ears, the dimensional aura already present around her at low register. Two blonde tails, dimensional energy crackling softly along their full length in the pattern that appeared when she was parsing overlapping frequencies. Her ears could not hear. What she heard instead required no ears at all — the resonance of one dimension pressing against another, the specific frequency of a lie encoded in a data record, the particular vibration of edited information at the level below the signal. Her two tails operated on two dimensional frequencies simultaneously, producing interference patterns she read the way others read text. The network map on the table was singing to her in a register no one else in the room could detect.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Iwa','https://ik.imagekit.io/xzzl7ab2e/Iwaneko.jpg?updatedAt=1780399301001');return false;">Iwa</a> came last. The mouth binding visible beneath her jaw. Yōgantō's carrying cloth across her back, the faint fissure-glow bleeding through the fabric at the blade edges. Two jet-black tails — the lava-crack light at their tips barely visible in the cool even light of the briefing room, but present, the way Yōgantō was always present, as extension rather than addition. Where <a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a> triangulated and <a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a> parsed frequency, Iwa carried finality — the two tails channeling the weapon's heat through dual dimensional conduits, doubling its reach into the compactified dimensions, making the fissure cracks true tears rather than merely physical ones. Yōgantō did not cut. It ended, in the fullest sense the word could hold. Iwa had not spoken since the day she lost her voice. Everything that required saying, the weapon said.</p>
+<p>They took their positions along the right wall without being directed to them. The psionic relay humming beneath all of it — the three masks in continuous conversation, three separate perceptions running as one unified intelligence.</p>
+<p>Three who were as one.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> arrived directly after, ducking slightly through the doorway out of habit. He looked at the network map. He looked at <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>. He sat down.</p>
+<p>"Leerma is not the first," he said. It was not a question.</p>
+<p>"It is the fourth," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. She adjusted the network map to show the full picture — four colonies, four supply network disruptions, four edited dispatch records, four points that formed a geometric shape when connected that pointed toward a specific region of the frontier. "The first three were dismissed as separate incidents. The fourth is when the pattern becomes readable."</p>
+<p>"It has been readable since the second," <a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a> said quietly. From her position at the wall. Without being asked.</p>
+<p>Everyone looked at her.</p>
+<p>"I had insufficient data points to bring a pattern rather than a suspicion," she said. "Two points establish a line. Three establish a triangle. The triangle established a region. The fourth confirmed the region and added the directionality."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> looked at <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>.</p>
+<p>"She reported to me after the third incident," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "I had her continue gathering."</p>
+<p>The silence in the room had a quality that suggested several people were deciding how to feel about having been kept from this for one additional data point's worth of time.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> let it settle.</p>
+<p>Beside <a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a>, <a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a> had not moved or spoken. The dimensional aura around her had shifted register — tightening toward whatever the network map was producing at the signal level beneath its visual display. She tilted her head a fraction. The aura shifted color briefly toward something that had no name in the standard spectrum.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> noticed. "You hear something in the network map."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a>'s two blonde tails moved once — affirmative but complex.</p>
+<p>"The edited records," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. "All four. Same hand."</p>
+<p>The tails again. Then <a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a> turned slightly toward <a class="char-link" href="#" onclick="openCharCard('Iwa','https://ik.imagekit.io/xzzl7ab2e/Iwaneko.jpg?updatedAt=1780399301001');return false;">Iwa</a>, and Iwa's hand came up from Yōgantō's carrying cloth and held three fingers against the fabric.</p>
+<p>Three separate access credentials. One operator.</p>
+<p>"They have three different identities inside our dispatch archive," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> looked at the three of them along the wall — <a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a> perceiving the room's dimensional geometry through the blindfold, <a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a> reading the frequency of information in ways no hearing being could, <a class="char-link" href="#" onclick="openCharCard('Iwa','https://ik.imagekit.io/xzzl7ab2e/Iwaneko.jpg?updatedAt=1780399301001');return false;">Iwa</a> speaking through her weapon's residual glow rather than her bound mouth. Three separate perceptions. One shared field. The psionic relay beneath it all, silent and constant.</p>
+<p>This was why <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> had found them on the battlefield and kept them. Not despite what they had lost. Because of what the losing had opened.</p>
+<p>"We know the region," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "We know the directionality. A single operator is running three identities inside our archive. We do not yet know the specific destination or the specific cargo. Kahvan-Da gave us the transfer mechanism and one destination — Leerma — which tells us they were extracting something from it, not delivering to it. The Blue Pepper disruption is a consequence of the operation, not the operation itself."</p>
+<p>"What were they extracting," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said.</p>
+<p>"That is what you are going to find out."</p>
+<p>He looked at the Trio. They were already looking at him.</p>
+<p>"The mission profile," <a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a> said.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> pulled up the operational overlay. The target was a secondary waystation in the frontier region the triangle had identified — smaller than Kahvan-Da, less trafficked, and based on the signal analysis, still active.</p>
+<p>"Entry without contact," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said. "Extract the cargo manifest records and the signal routing logs. No engagement unless necessary."</p>
+<p>"And if engagement becomes necessary," <a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a> said.</p>
+<p>"Make it brief."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Iwa','https://ik.imagekit.io/xzzl7ab2e/Iwaneko.jpg?updatedAt=1780399301001');return false;">Iwa</a>'s mouth curved slightly at the corners beneath the binding. Yōgantō's fissure glow brightened one degree.</p>
+<p>"There is one additional element," <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> said. She adjusted the display. A new connection appeared in the network map — a thread running parallel to the DarkPack operation, overlapping it at several nodes but not identical to it. "Someone else is watching this operation. Has been watching it longer than we have."</p>
+<p>"DarkPack internal," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said.</p>
+<p>"I thought so initially." <a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> paused. "It is not. The underlying signature is Lycan Galactic Pack. Secret Police."</p>
+<p>The room processed this.</p>
+<p>"There is an asset embedded in the DarkPack operation," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"There is an asset embedded in the DarkPack operation who has been feeding selected signal fragments to an external contact for at least four turns. The fragments are arriving through a blind channel. The source cannot be identified from the receiving end."</p>
+<p>"But you identified it from the sending end."</p>
+<p>"I identified the shape of it. The source has been very careful." A pause. "Careful in a way that suggests they are aware their own organization may be monitoring outgoing signals."</p>
+<p>"They are on the inside," <a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> said. "And they are trying to get information out without their own people knowing they are doing it."</p>
+<p>"To whom is the information going," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Shiro','https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741');return false;">Shiro</a> looked at her across the table.</p>
+<p>"To us," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"The blind channel terminates at a receiving node that was established by this intelligence service three paths before the DarkPack operation began producing observable signal. Someone knew to send it here before we knew to look for it."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> sat with that for a moment.</p>
+<p>"Whoever this is," she said, "has been trying to reach us since before we knew there was something to reach us about."</p>
+<p>Mu, occupying a corner of the long table in the precise way Mu occupied spaces — small, still, apparently irrelevant — slow blinked once.</p>
+<p>"The mission proceeds," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "<a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a>. Take the Trio. Retrieve the manifest records and the routing logs. If the asset makes contact — and I believe they will once they know we are present in the network — bring back whatever they offer. Do not reach for them. Let them reach."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Yamaneko','https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193');return false;">Yamaneko</a> stood.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Mine','https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303');return false;">Mine</a>, <a class="char-link" href="#" onclick="openCharCard('Kika','https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729');return false;">Kika</a>, and <a class="char-link" href="#" onclick="openCharCard('Iwa','https://ik.imagekit.io/xzzl7ab2e/Iwaneko.jpg?updatedAt=1780399301001');return false;">Iwa</a> had already begun moving toward the door — the same single-unit threshold crossing as their entrance, three bodies moving as one considered purpose.</p>
+<p>The door closed.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> looked at the network map for a long moment. Then she looked at Mu.</p>
+<p>Mu looked back. The violet eyes very still.</p>
+<p>"I know," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>She picked up her mask and walked toward the door.</p>
+<div class="scene-break"><span>◆</span></div>
+<div class="section-break"><span>THE GARDEN</span></div>
+<p>The garden on the eastern side of the palace was old in the specific way that things in the Shogunate were old — not decayed but <em>settled</em>, every stone and shaped plant and path and water feature having arrived at exactly the place it was supposed to be through centuries of patient intention. The violet-tinted light of early in the turn, before the sun climbed high enough to bleach the color out of it, lay across the garden in warm amethyst planes, and the water in the ornamental channel caught it and held it in long still strips.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> was already there.</p>
+<p>She was seated on the flat rock beside the channel in the particular way she sat — absolutely upright, absolutely still, the dark plain robes pooling slightly around her, Kaze at her left hip. A small tea service sat on the flat stone beside her — a pot, a cup, a saucer. The cup was chipped at the rim. It had been chipped for longer than most of the palace's current stones had been in their places. She held it in both hands and looked at the water.</p>
+<p>She was not meditating. She was watching.</p>
+<p>What <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> watched with was not what anyone looking at her would assume — the cataract-white eyes directed at the water's surface were not seeing the water. They were seeing the path matter made through dark energy. The dimensional poisoning that had taken her conventional sight over the long centuries of her life had replaced it with something else entirely — not vision as others understood it, but a reading of the fabric itself, the way mass and energy and the quiet background hum of dark matter moved through and around every object in her field of perception. She had watched the weapons this way since before <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> could walk. She had watched them change.</p>
+<p>Mu arrived slightly before <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>, which was always the case. The small black cat settled on the stone beside <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> with the ease of a creature arriving home and sat facing the garden.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> came along the path from the palace's eastern wing and stopped at the edge of the garden. She stood for a moment, taking in the two of them — the ancient Bakeneko who had trained her and the ancient presence who had chosen her — side by side on a rock beside an ornamental water channel in the early light, apparently watching nothing in particular.</p>
+<p>"You are both here," she said.</p>
+<p>"We are frequently both here," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said. "You are infrequently here at this time."</p>
+<p>"I did not require sleep."</p>
+<p>"I know."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> sat on the stone on the other side of Mu. The three of them faced the garden. The water moved in its channel. The violet light warmed slowly toward something closer to white as the sun climbed.</p>
+<p>"I have been thinking about Leerma," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"You have been thinking about the pattern that Leerma completed," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said.</p>
+<p>"Yes. And about <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a>. And about what Rex wants."</p>
+<p>A long pause. The water moved.</p>
+<p>"He is following something," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "The colony disruptions are not the operation — they are the trace of the operation. He is extracting dimensional resonance data encoded in agricultural genetics. The Blue Pepper of Leerma produces a specific resonance signature in its stabilization chemistry consistent with something older than the colony. Older than Leerma. Older than most things."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> was quiet.</p>
+<p>"He is following a trail with enough purpose that it cannot be opportunism," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "<a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> does not strike me as a being who pursues things without knowing what he is pursuing."</p>
+<p>"He knows what he is pursuing," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said. "He does not know what it is."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> looked at her. Then she looked at Mu — and the particular quality of the look was the one she used when she wanted something from someone she loved completely and trusted completely and knew was not going to give it to her.</p>
+<p>She smiled. The small private smile that lived behind the mask when the mask was not there to hold it. She looked at Mu with something warm and affectionate and faintly amused in her eyes — the look of someone about to ask a question they already know the answer to and are enjoying the asking of anyway.</p>
+<p>Mu returned her gaze steadily. The violet eyes very calm. Then — the smallest thing — a tail flick. Frisky. Almost playful. The acknowledgment of a game both of them understood the rules of.</p>
+<p>"Would you ever tell me," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said, "oh wise and wonderful Mu, what truly is the power inside these blades?"</p>
+<p>Mu looked at her. The violet eyes held something that might, in a less ancient intelligence, have been called fondness.</p>
+<p>Mu did not speak.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> set down her teacup — the chipped rim catching the morning light as she placed it with the particular delicacy of someone who had set it down in ten thousand gardens on ten thousand turns and found the same precise spot every time.</p>
+<p>"Lil' kitten," she said. "You know Mu will never tell you."</p>
+<p>She turned her white eyes toward <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>. Not seeing her the way others saw her — seeing the shape she made in the fabric, the dimensional signature of the weapons in her hands and at her hips, the resonance of what had chosen her and what she had become.</p>
+<p>"But I can try. You need to know anyway." A pause. "And you are truly ready for the answer."</p>
+<p>Mu moved from the stone beside <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> and crossed the short distance to <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a>'s lap. Settled there with the comfortable certainty of something that had made this choice and was not reconsidering it. Head raised. Violet eyes fixed on Arashi with the quality of attention that meant Mu was listening to something already known being said aloud for the first time to someone who needed to hear it.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> picked up the teacup again and held it in both hands.</p>
+<p>"Life has been a part of this universe for as long as it has existed," she said. "This is what our legends say. Our traditions speak to it. Our culture revolves around it." She sipped. Set the chipped cup delicately back on its saucer. "In truth we do not know how old our realm is. What we call our universe is just the broken remains of its once glorious prime — and one of a trillion like it. Reality was vast. Infinite, they believed."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> let her mind absorb this. <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>'s knowledge was always this — not the careful measured disclosure of someone sharing intelligence, but the easy reach of someone for whom these things were simply the furniture of understanding. Things she had known so long they had stopped feeling like revelations.</p>
+<p>"The first race to conquer this galaxy," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> continued, taking a slow breath, "evolved far beyond flesh and blood. And even their brief existence as synthetic creatures could not stop them from becoming one with the fabric of the dimensions."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> could not hold the questions back.</p>
+<p>"The first conquering race," she said. "Were they like us? Do we know anything about them?"</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> let her bright white eyes close slowly — as if weighing that answer took physical effort.</p>
+<p>"We believe they looked very much like us," she said. "But even that knowledge is second-hand, if you will. It comes with the same texts that detail our own creation — written by those who came after, about those who came before, and subject to all the ways that memory changes what it carries over sufficient time."</p>
+<p>The water moved in the channel.</p>
+<p>"The weapons," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"The weapons are what remained," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said. "When the first race crossed the final threshold — when the mathematics of what they understood and where they existed pushed them past what any physical form could hold — they did not disappear. They became." She paused. "They chose to remain present in the only way available to something that has become dimensional. As awareness bonded to form. Waiting for the right vessel. Waiting for the right time."</p>
+<p>"They recognized me," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said.</p>
+<p>"They recognized what you carry," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said. "The biological echo of what they once were, so many generations removed that the original relationship is invisible in the record but unmistakable in the resonance. You are the closest thing to them that has existed in the physical universe in a very long time."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> sat with this.</p>
+<p>Mu's head remained raised and fixed on <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>. Not a correction. Not a contradiction. Simply witness.</p>
+<p>"And the signal <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> is following," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said. "The resonance that is older than the Nine. Larger."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> was quiet for a long moment.</p>
+<p>"That is a question for which the answer requires that you first fully hold what I have just told you. What I have told you is not the whole of it. It is what you need now." She picked up the teacup. "The rest comes in its time."</p>
+<p>"<a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>."</p>
+<p>"In its time," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said. The one finger raised. A full stop.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> looked at the water. Mu pressed the top of a small black head briefly against her hand, then settled back, still watching <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a>, still present.</p>
+<p>The violet light had warmed fully to white. The garden was bright and quiet and old.</p>
+<p>"I need to know," <a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> said, very quietly, "if my mother is alive."</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> and Mu were both still.</p>
+<p>"That," <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> said, after a long moment, "is also a question for which the time approaches."</p>
+<p>It was not an answer. It was something better — the acknowledgment that the question was real, and pointed in the right direction, and that the answer existed somewhere and was moving toward her.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Byakko','https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663');return false;">Byakko</a> sat with it.</p>
+<p>The garden was quiet. <a class="char-link" href="#" onclick="openCharCard('Arashi','https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355');return false;">Arashi</a> picked up her teacup, sipped, and set it down on its saucer with the same delicate precision she had used ten thousand times before.</p>
+<p>The water moved.</p>
+<div class="scene-break"><span>◆</span></div>
+<div class="section-break"><span>THE OTHER SIDE</span></div>
+<p>Three turns' travel from Tamashii, in a region of the frontier that the official charts classified as economically inactive and the DarkPack classified as operationally convenient, there was a facility that did not appear in any registry.</p>
+<p>The main chamber was large enough. Screens covered two walls, displaying operational feeds, signal maps, intelligence summaries, the constant information metabolism of a significant covert operation in full forward motion. The amber-and-red light that the DarkPack favored gave everything a quality of perpetual crisis, which was, of course, the point.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Speaker <a class="char-link" href="#" onclick="openCharCard('Vox','https://ik.imagekit.io/xzzl7ab2e/Speaker%20Vox.jpg?updatedAt=1780399300720');return false;">Vox</a>','https://ik.imagekit.io/xzzl7ab2e/Speaker%20Vox.jpg?updatedAt=1780399300720');return false;">Speaker Vox</a> stood at the central podium — one meter tall, compact in the way that certain things are compact, the human-proportioned head and hands sitting on a frame that had been, by some accident of genetics, given far less vertical distance to work with than it deserved. What he lacked in height he had never once noticed. The conviction more than compensated. He was speaking to the assembled intelligence staff with the focused intensity of someone who had been saying the same things in different registers for so long that the words had become something other than words — a kind of continuous vibration, a background frequency that the people around him breathed in and out until it became indistinguishable from their own thinking.</p>
+<p>"The Nekojin presence at Kahvan-Da was expected," he was saying, one finger raised, the red cybernetic eye catching the chamber light. "Expected, accounted for, absorbed into the operational timeline without incident. The data has been extracted. The transfer is done. The trail they followed ends at Kahvan-Da because we ended it there." He paused to let this register. "They have found a waystation. They have not found the road."</p>
+<p>At the edge of the light, <a class="char-link" href="#" onclick="openCharCard('Beta <a class="char-link" href="#" onclick="openCharCard('Kijo','https://ik.imagekit.io/xzzl7ab2e/Beta%20Kijo.jpg?updatedAt=1780399299779');return false;">Kijo</a>','https://ik.imagekit.io/xzzl7ab2e/Beta%20Kijo.jpg?updatedAt=1780399299779');return false;">Beta Kijo</a> and <a class="char-link" href="#" onclick="openCharCard('Thinker <a class="char-link" href="#" onclick="openCharCard('Xort','https://ik.imagekit.io/xzzl7ab2e/Thinker%20Xort.jpg?updatedAt=1780399299914');return false;">Xort</a>','https://ik.imagekit.io/xzzl7ab2e/Thinker%20Xort.jpg?updatedAt=1780399299914');return false;">Thinker Xort</a> stood together — Kijo where she preferred to stand, the golden fire at the tip of her blade the brightest thing at that end of the room, Xort beside her with arms folded and red cybernetic eyes on the podium with the expression she used when she was processing something she found simultaneously useful and irritating.</p>
+<p>"He is insufferable," <a class="char-link" href="#" onclick="openCharCard('Xort','https://ik.imagekit.io/xzzl7ab2e/Thinker%20Xort.jpg?updatedAt=1780399299914');return false;">Xort</a> said, very quietly.</p>
+<p>"He is effective," <a class="char-link" href="#" onclick="openCharCard('Kijo','https://ik.imagekit.io/xzzl7ab2e/Beta%20Kijo.jpg?updatedAt=1780399299779');return false;">Kijo</a> said.</p>
+<p>"Those are not mutually exclusive."</p>
+<p>"No." <a class="char-link" href="#" onclick="openCharCard('Kijo','https://ik.imagekit.io/xzzl7ab2e/Beta%20Kijo.jpg?updatedAt=1780399299779');return false;">Kijo</a> watched <a class="char-link" href="#" onclick="openCharCard('Vox','https://ik.imagekit.io/xzzl7ab2e/Speaker%20Vox.jpg?updatedAt=1780399300720');return false;">Vox</a>'s finger rise to its familiar position. "The annoying little purebred has an instinct for the howling point. Give him a message and he will find exactly the note that makes the masses lift their heads and open their mouths."</p>
+<p>"An ass-licking sycophant with a gift," <a class="char-link" href="#" onclick="openCharCard('Xort','https://ik.imagekit.io/xzzl7ab2e/Thinker%20Xort.jpg?updatedAt=1780399299914');return false;">Xort</a> said.</p>
+<p>"The most dangerous kind," <a class="char-link" href="#" onclick="openCharCard('Kijo','https://ik.imagekit.io/xzzl7ab2e/Beta%20Kijo.jpg?updatedAt=1780399299779');return false;">Kijo</a> said.</p>
+<p>"The operation advances," <a class="char-link" href="#" onclick="openCharCard('Vox','https://ik.imagekit.io/xzzl7ab2e/Speaker%20Vox.jpg?updatedAt=1780399300720');return false;">Vox</a> continued. He looked around the chamber. "The operation always advances."</p>
+<p>From the back of the room, a door opened.</p>
+<p>The light changed.</p>
+<p>Not dramatically — not the way light shifts when something significant enters a space in stories. It diminished. The amber-red of the chamber's operational lighting pulled toward the corners as if something at the center was absorbing it, and what remained took on a quality that had no clean name — a sickening reduction of energy, a dying hue of corrupted green and red bleeding into the reflections on the screens, the floor, the faces of the staff. Wherever <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> stood became the center of the room by default. Not because he demanded it. Because everything else relocated itself around the fact of him.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Alpha <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a>','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Alpha Rex</a> walked to the center of the chamber.</p>
+<p>The staff did not turn to look at him. They had learned not to.</p>
+<p>He passed the cage on his way to the dais without slowing — one hand closing around the chain at the Usagi prisoner's neck, lifting, and continuing forward in the same motion. The prisoner's feet found the floor again only when <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> dropped the chain and let him scramble. He dragged the stunned and barely resisting captive up onto the dais — the throne of compacted skulls fired into a morbid porcelain form, a chintzy sovereign's perch that would have been absurd on anyone else and was simply Rex's — and took Regret into both hands.</p>
+<p>The weapon responded. The corruption along its surface deepened. The acid green and dark red of the entity's expression pulsed once, slowly, with something that might have been anticipation.</p>
+<p>He stood looking at the operational screens. One side of his face caught the diminished light — the intact side, the heavy jaw, the dark eye that was simply an eye. The other side was what Regret had built in place of what Hope had taken — not a wound, not a repair, not a prosthetic. Something that had grown in the space where a mind used to be. Dark and acid-green and alive in the way ancient things were alive. Patient. Permanent.</p>
+<p>"I need to be closer," <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> said. His voice from the depth it always came from. "Tell me. Where is it."</p>
+<p>He looked at the prisoner. The prisoner looked back — a Usagi who had, in the last few moments, clearly completed some internal accounting and arrived at a number he was at peace with.</p>
+<p>"Where is the next relay station. The one you passed through when you left the Oumura Library." A pause. "Where is Scholar Ren."</p>
+<p>The Usagi stared directly at the void that had been the left side of <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a>'s skull.</p>
+<p>"Eat glass, Mutt."</p>
+<p>He spat into the void. The wispy puff of vapor was the only reaction <a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> showed.</p>
+<p>Regret swung.</p>
+<p>The Usagi's defiance ended the only way defiance in this room ended.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> stood in the diminished light with the weapon in his hands and the whisper arriving — not entering, <em>arriving</em>, the way Regret's voice always arrived, from inside rather than outside, from the place where his mind used to be:</p>
+<p><em>Leerma leads to Grenriyan. Grenriyan leads to Tamashii. Your vengeance awaits you there.</em></p>
+<p><a class="char-link" href="#" onclick="openCharCard('Rex','https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014');return false;">Rex</a> recoiled from it. Then he did not. The revulsion and the allure arrived together, as they always did, indistinguishable from each other, indistinguishable from his own wanting.</p>
+<p>He sat on the throne.</p>
+<p>The light in the room stayed wrong.</p>
+<p><a class="char-link" href="#" onclick="openCharCard('Vox','https://ik.imagekit.io/xzzl7ab2e/Speaker%20Vox.jpg?updatedAt=1780399300720');return false;">Vox</a> looked at the assembled staff. The red eye burned.</p>
+<p>"Closer," he said.</p>
+<div class="scene-break"><span>◆</span></div>
+<p><em>Chapter One — End</em></p>
+<p><em>Chapter Two continues...</em></p>
+<div class="ch-end">
+  <p class="kanji">猫族将軍道</p>
+  <p class="cont">Chapter Two continues&hellip;</p>
+</div>
+</main>
+
+<!-- ══ FOOTER ════════════════════════════════════ -->
+<footer>
+  <p>Nekozoku Shōgundō &nbsp;·&nbsp; Alexis Littlepaws &nbsp;·&nbsp; 猫族将軍道</p>
+  <p style="margin-top:7px;font-size:.88em;">
+    The author used AI to research and verify scientific truths related to this literary work.<br>
+    Brief passages have been generated by AI and heavily edited by the author.<br>
+    AI has organized and maintained all canonical information and documents related to the work.
+  </p>
+</footer>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+const prog = document.getElementById("prog");
+const btt  = document.getElementById("btt");
+
+window.addEventListener("scroll", () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  prog.style.width = pct + "%";
+  btt.classList.toggle("show", window.scrollY > 500);
+}, {passive:true});
+
+btt.addEventListener("click", e => {
+  e.preventDefault();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+<nav class="site-nav">
+  <a href="index.html" class="nav-link" id="nav-home">
+    <span class="nav-kanji">家</span>
+    <span class="nav-label">Home</span>
+  </a>
+  <div class="nav-divider"></div>
+  <a href="chapter_one.html" class="nav-link" id="nav-chapter">
+    <span class="nav-kanji">一</span>
+    <span class="nav-label">Chapter One</span>
+  </a>
+  <div class="nav-divider"></div>
+  <a href="library.html" class="nav-link" id="nav-library">
+    <span class="nav-kanji">蔵</span>
+    <span class="nav-label">Library</span>
+  </a>
+</nav>
+
+<style>
+.site-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(7,7,15,.96);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(200,171,106,.15);height:54px;
+}
+.nav-link{
+  display:flex;align-items:center;gap:10px;
+  padding:0 clamp(20px,4vw,52px);height:100%;
+  text-decoration:none;transition:background .2s;
+}
+.nav-link:hover,.nav-link.active{background:rgba(200,171,106,.07)}
+.nav-kanji{
+  font-family:"Noto Serif JP",serif;font-size:18px;
+  color:#c8ab6a;opacity:.6;line-height:1;transition:opacity .2s;
+}
+.nav-label{
+  font-family:"Cinzel",serif;font-size:9px;
+  letter-spacing:.4em;color:#7a6535;
+  text-transform:uppercase;transition:color .2s;
+}
+.nav-link:hover .nav-kanji,.nav-link.active .nav-kanji{opacity:1}
+.nav-link:hover .nav-label,.nav-link.active .nav-label{color:#c8ab6a}
+.nav-divider{width:1px;height:22px;background:rgba(200,171,106,.12);flex-shrink:0}
+body{padding-bottom:54px}
+</style>
+
+<script>
+(function(){
+  var page = window.location.pathname.split('/').pop() || 'index.html';
+  var map = {'index.html':'nav-home','chapter_one.html':'nav-chapter','library.html':'nav-library'};
+  var el = document.getElementById(map[page]);
+  if(el) el.classList.add('active');
+})();
+</script>
+
+<!-- Character Card Lightbox -->
+<div id="char-lightbox" onclick="closeCharCard()" style="
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(4,4,10,.92);backdrop-filter:blur(16px);
+  align-items:center;justify-content:center;cursor:pointer;
+">
+  <div style="position:relative;max-width:420px;width:90vw;">
+    <img id="char-lb-img" src="" style="
+      width:100%;display:block;
+      border:1px solid rgba(200,171,106,.2);
+      box-shadow:0 0 80px rgba(0,0,0,.7);
+    ">
+    <div id="char-lb-name" style="
+      font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;
+      color:#c8ab6a;text-align:center;padding:14px 0 4px;opacity:.8;
+    "></div>
+    <div style="
+      font-family:'EB Garamond',serif;font-style:italic;
+      font-size:12px;color:#7a6535;text-align:center;
+      letter-spacing:.1em;
+    ">click anywhere to close</div>
+  </div>
+</div>
+
+<style>
+
+</style>
+
+<script>
+var CHAR_CARDS = {"Byakko": "https://ik.imagekit.io/xzzl7ab2e/Queen%20Byakko.jpg?updatedAt=1780399300663", "Yuki": "https://ik.imagekit.io/xzzl7ab2e/Princess%20Yuki.jpg?updatedAt=1780399300644", "Yamaneko": "https://ik.imagekit.io/xzzl7ab2e/Yamaneko.jpg?updatedAt=1780399300193", "Arashi": "https://ik.imagekit.io/xzzl7ab2e/Arashi.jpg?updatedAt=1780400312355", "Shiro": "https://ik.imagekit.io/xzzl7ab2e/Shiro.jpg?updatedAt=1780399300741", "Mu": "https://ik.imagekit.io/xzzl7ab2e/Mu.jpg?updatedAt=1780399300393", "Mine": "https://ik.imagekit.io/xzzl7ab2e/Mineko.jpg?updatedAt=1780399300303", "Kika": "https://ik.imagekit.io/xzzl7ab2e/Kikaneko.jpg?updatedAt=1780399300729", "Iwa": "https://ik.imagekit.io/xzzl7ab2e/Iwaneko.jpg?updatedAt=1780399301001", "Rex": "https://ik.imagekit.io/xzzl7ab2e/Alpha%20Rex.jpg?updatedAt=1780399301014", "Vox": "https://ik.imagekit.io/xzzl7ab2e/Speaker%20Vox.jpg?updatedAt=1780399300720", "Kijo": "https://ik.imagekit.io/xzzl7ab2e/Beta%20Kijo.jpg?updatedAt=1780399299779", "Xort": "https://ik.imagekit.io/xzzl7ab2e/Thinker%20Xort.jpg?updatedAt=1780399299914"};
+
+function openCharCard(name, url) {
+  var lb = document.getElementById('char-lightbox');
+  var img = document.getElementById('char-lb-img');
+  var nm = document.getElementById('char-lb-name');
+  img.src = url;
+  nm.textContent = name;
+  lb.style.display = 'flex';
+  event.preventDefault();
+  event.stopPropagation();
+}
+
+function closeCharCard() {
+  document.getElementById('char-lightbox').style.display = 'none';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeCharCard();
+});
+</script>
+
+</body>
+</html>
