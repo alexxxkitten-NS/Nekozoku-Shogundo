@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫族将軍道 — Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070f; --bg2:#0d0d1a; --bg3:#12121f;
+  --gold:#c8ab6a; --gold-dim:#7a6535; --violet:#8955be; --teal:#38b8b8;
+  --text:#dfd5c2; --text-dim:#887d6c; --rule:rgba(200,171,106,.15);
+  --card-bg:#0f0f1c; --card-hover:#161628;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"EB Garamond",Georgia,serif;font-size:16px;line-height:1.7;min-height:100vh;overflow-x:hidden;padding-bottom:54px}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E")}
+
+.site-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--rule);background:rgba(7,7,15,.95);backdrop-filter:blur(12px)}
+.header-brand{display:flex;align-items:center;gap:16px}
+.header-jp{font-family:"Noto Serif JP",serif;font-weight:700;font-size:22px;background:linear-gradient(135deg,#f0dfa8,#c8ab6a,#8a6535);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(200,171,106,.3))}
+.header-en{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.4em;color:var(--gold-dim);opacity:.7}
+.header-label{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.5em;color:var(--teal);opacity:.6;text-transform:uppercase}
+
+/* progress */
+.progress-bar{position:relative;z-index:10;padding:26px 40px 6px;max-width:1100px}
+.progress-bar h1{font-family:"Cinzel",serif;font-weight:500;font-size:20px;letter-spacing:.18em;color:var(--gold);margin-bottom:12px}
+.meter-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.meter{flex:1;min-width:220px}
+.meter .nums{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:6px}
+.meter .nums b{color:var(--gold)}
+.track{height:3px;background:var(--bg3);overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold-dim),var(--gold));transition:width .5s}
+.lex-link{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--teal);text-decoration:none;border:1px solid var(--rule);padding:8px 14px;white-space:nowrap}
+.lex-link:hover{border-color:var(--teal);color:var(--gold)}
+.lex-link b{color:var(--gold)}
+
+/* controls */
+.controls{position:relative;z-index:10;padding:18px 40px 8px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.filter-pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.3em;padding:7px 16px;border:1px solid var(--rule);color:var(--text-dim);cursor:pointer;background:transparent;transition:all .2s;text-transform:uppercase}
+.pill:hover{border-color:var(--gold-dim);color:var(--gold)}
+.pill.active{border-color:var(--gold);color:var(--gold);background:rgba(200,171,106,.06)}
+.spacer{flex:1}
+.toolbtn{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;background:transparent;border:1px solid var(--rule);color:var(--text-dim);padding:7px 14px;cursor:pointer;transition:all .2s}
+.toolbtn:hover{border-color:var(--gold-dim);color:var(--gold)}
+.toolbtn.on{border-color:var(--teal);color:var(--teal)}
+
+/* grid */
+main{position:relative;z-index:10;padding:18px 40px 60px;max-width:1100px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:8px}
+.tile{position:relative;aspect-ratio:3/4;background:var(--card-bg);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:transform .18s,border-color .18s}
+.tile:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .cap{position:absolute;left:0;right:0;bottom:0;padding:24px 12px 11px;background:linear-gradient(transparent,rgba(7,7,15,.92));}
+.tile .cap .nm{font-family:"Cinzel",serif;font-size:12px;letter-spacing:.03em;color:var(--gold);line-height:1.25}
+.tile .cap .ty{font-family:"Cinzel",serif;font-size:7.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);opacity:.7;margin-top:3px}
+.tile .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif JP",serif;font-size:46px;color:var(--gold-dim);opacity:.35}
+
+/* locked */
+.tile.locked{cursor:default;border-style:dashed;border-color:rgba(200,171,106,.12)}
+.tile.locked:hover{transform:none;border-color:rgba(200,171,106,.2)}
+.tile.locked .seal{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:repeating-linear-gradient(45deg,#0c0c17,#0c0c17 9px,#0d0d1a 9px,#0d0d1a 18px)}
+.tile.locked .seal .glyph{font-family:"Noto Serif JP",serif;font-size:40px;color:var(--gold-dim);opacity:.45}
+.tile.locked .seal .lab{font-family:"Cinzel",serif;font-size:7.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim)}
+.tile.locked .seal .ty{font-family:"Cinzel",serif;font-size:7px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dim);opacity:.6}
+
+.cat-head{display:flex;align-items:center;gap:18px;margin:30px 0 4px}
+.cat-head h2{font-family:"Cinzel",serif;font-weight:700;font-size:11px;letter-spacing:.5em;color:var(--teal);text-transform:uppercase;white-space:nowrap}
+.cat-head .line{flex:1;height:1px;background:var(--rule)}
+.cat-head .ct{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.2em;color:var(--text-dim)}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(4,4,9,.86);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid rgba(200,171,106,.3);max-width:760px;width:100%;max-height:86vh;overflow:auto;display:grid;grid-template-columns:minmax(0,300px) 1fr}
+.modal .m-img{background:#000;min-height:260px}
+.modal .m-img img{width:100%;height:100%;object-fit:cover;display:block}
+.modal .m-img .noimg{display:flex;align-items:center;justify-content:center;height:100%;font-family:"Noto Serif JP",serif;font-size:70px;color:var(--gold-dim);opacity:.3}
+.modal .m-body{padding:26px 28px 30px}
+.modal .m-ty{font-family:"Cinzel",serif;font-size:8px;letter-spacing:.4em;text-transform:uppercase;color:var(--teal)}
+.modal .m-nm{font-family:"Cinzel",serif;font-size:23px;letter-spacing:.04em;color:var(--gold);margin:6px 0 2px}
+.modal .m-lit{font-style:italic;color:var(--violet);opacity:.9;font-size:14px}
+.modal .m-spec{margin:14px 0 2px;border-top:1px solid var(--rule);padding-top:12px}
+.modal .m-spec .row{display:flex;gap:10px;font-size:14px;margin-bottom:3px}
+.modal .m-spec .row .lk{font-family:"Cinzel",serif;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-dim);min-width:70px;padding-top:3px}
+.modal .m-bio{margin-top:14px}
+.modal .m-close{position:absolute;top:18px;right:22px;font-size:26px;color:var(--text-dim);cursor:pointer;line-height:1;z-index:2}
+.modal .m-close:hover{color:var(--gold)}
+@media(max-width:560px){.modal{grid-template-columns:1fr}.modal .m-img{min-height:300px}}
+
+.empty{padding:50px 18px;text-align:center;color:var(--text-dim);font-style:italic}
+
+/* nav */
+.site-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(7,7,15,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(200,171,106,.15);height:54px}
+.nav-link{display:flex;align-items:center;gap:9px;padding:0 clamp(12px,2.8vw,38px);height:100%;text-decoration:none;transition:background .2s}
+.nav-link:hover,.nav-link.active{background:rgba(200,171,106,.07)}
+.nav-kanji{font-family:"Noto Serif JP",serif;font-size:18px;color:var(--gold);opacity:.6;line-height:1;transition:opacity .2s}
+.nav-label{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.35em;color:var(--gold-dim);text-transform:uppercase;transition:color .2s}
+.nav-link:hover .nav-kanji,.nav-link.active .nav-kanji{opacity:1}
+.nav-link:hover .nav-label,.nav-link.active .nav-label{color:var(--gold)}
+.nav-divider{width:1px;height:22px;background:rgba(200,171,106,.12);flex-shrink:0}
+
+@media(max-width:640px){
+  .site-header,.progress-bar,.controls,main{padding-left:20px;padding-right:20px}
+  .nav-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-brand">
+    <div><div class="header-jp">猫族将軍道</div><div class="header-en">NEKOZOKU SHŌGUNDŌ</div></div>
+    <div class="header-label">Codex</div>
+  </div>
+</header>
+
+<section class="progress-bar">
+  <h1>The Codex</h1>
+  <div class="meter-row">
+    <div class="meter">
+      <div class="nums">Discovered <b id="n-have">0</b> of <span id="n-total">0</span></div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+    </div>
+    <a class="lex-link" href="glossary.html">Lexicon · <b id="lex-have">0</b>/<span id="lex-total">0</span> words &rsaquo;</a>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="filter-pills" id="pills"></div>
+  <div class="spacer"></div>
+  <button class="toolbtn" id="reveal">Reveal all</button>
+  <button class="toolbtn" id="reset">Reset</button>
+</div>
+
+<main id="codex"><div class="empty">Opening the codex…</div></main>
+
+<div class="modal-bg" id="modalbg">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <span class="m-close" id="mclose">×</span>
+    <div class="m-img" id="m-img"></div>
+    <div class="m-body" id="m-body"></div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-link" id="nav-home"><span class="nav-kanji">家</span><span class="nav-label">Home</span></a>
+  <div class="nav-divider"></div>
+  <a href="chapter_one.html" class="nav-link" id="nav-chapter"><span class="nav-kanji">一</span><span class="nav-label">Chapter One</span></a>
+  <div class="nav-divider"></div>
+  <a href="library.html" class="nav-link" id="nav-library"><span class="nav-kanji">蔵</span><span class="nav-label">Library</span></a>
+  <div class="nav-divider"></div>
+  <a href="glossary.html" class="nav-link" id="nav-glossary"><span class="nav-kanji">語</span><span class="nav-label">Lexicon</span></a>
+  <div class="nav-divider"></div>
+  <a href="codex.html" class="nav-link active" id="nav-codex"><span class="nav-kanji">録</span><span class="nav-label">Codex</span></a>
+</nav>
+
+<script>
+(function(){
+  var KEY="ns_codex_v1", REVEAL_KEY="ns_codex_revealall";
+  var IK="https://ik.imagekit.io/xzzl7ab2e";
+  var CODEX=null, GLOSS=null, filter="all";
+  var TYPES=[["all","All"],["character","Characters"],["weapon","Weapons"],["armor","Armor"],["place","Places"]];
+  var TYPE_LABEL={character:"Character",weapon:"Weapon",armor:"Armor",place:"Place"};
+  var TYPE_GLYPH={character:"人",weapon:"刀",armor:"甲",place:"地"};
+
+  function getState(){ try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.entries&&s.terms)return s;}catch(e){} return {entries:[],terms:[]}; }
+  function revealAll(){ try{return localStorage.getItem(REVEAL_KEY)==="1";}catch(e){return false;} }
+  function setReveal(v){ try{localStorage.setItem(REVEAL_KEY,v?"1":"0");}catch(e){} }
+  function esc(s){return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function imgUrl(p){ return p ? (IK+p) : null; }
+
+  function isUnlocked(e){ return revealAll() || getState().entries.indexOf(e.id)>-1; }
+
+  function updateMeters(){
+    var st=getState();
+    var total=CODEX.entries.length, have=revealAll()?total:st.entries.length;
+    document.getElementById("n-have").textContent=have;
+    document.getElementById("n-total").textContent=total;
+    document.getElementById("fill").style.width=(total?Math.round(have/total*100):0)+"%";
+    if(GLOSS){
+      var lt=GLOSS.terms.length, lh=revealAll()?lt:st.terms.length;
+      document.getElementById("lex-have").textContent=lh;
+      document.getElementById("lex-total").textContent=lt;
+    }
+  }
+
+  function tileHTML(e){
+    if(!isUnlocked(e)){
+      return '<div class="tile locked"><div class="seal">'
+        +'<div class="glyph">未</div><div class="lab">Undiscovered</div>'
+        +'<div class="ty">'+esc(TYPE_LABEL[e.type]||"")+'</div></div></div>';
+    }
+    var url=imgUrl(e.img);
+    var media = url
+      ? '<img src="'+esc(url)+'" alt="'+esc(e.name)+'" loading="lazy" onerror="this.parentNode.classList.add(\'imgfail\');this.outerHTML=\'<div class=&quot;noimg&quot;>'+esc(TYPE_GLYPH[e.type]||"録")+'</div>\'">'
+      : '<div class="noimg">'+esc(TYPE_GLYPH[e.type]||"録")+'</div>';
+    return '<div class="tile" data-id="'+esc(e.id)+'">'+media
+      +'<div class="cap"><div class="nm">'+esc(e.name)+'</div><div class="ty">'+esc(TYPE_LABEL[e.type]||"")+'</div></div></div>';
+  }
+
+  function render(){
+    var host=document.getElementById("codex");
+    var order=["character","weapon","armor","place"];
+    var html="", any=false;
+    order.forEach(function(ty){
+      if(filter!=="all" && filter!==ty) return;
+      var items=CODEX.entries.filter(function(e){return e.type===ty;});
+      if(!items.length) return;
+      any=true;
+      var have=items.filter(isUnlocked).length;
+      html+='<div class="cat-head"><h2>'+esc(TYPE_LABEL[ty]+"s")+'</h2><div class="line"></div><div class="ct">'+have+' / '+items.length+'</div></div>';
+      html+='<div class="grid">'+items.map(tileHTML).join("")+'</div>';
+    });
+    host.innerHTML = any?html:'<div class="empty">Nothing here yet.</div>';
+    host.querySelectorAll(".tile[data-id]").forEach(function(t){
+      t.addEventListener("click",function(){ openModal(t.getAttribute("data-id")); });
+    });
+    updateMeters();
+  }
+
+  function openModal(id){
+    var e=CODEX.entries.find(function(x){return x.id===id;}); if(!e)return;
+    var url=imgUrl(e.img);
+    document.getElementById("m-img").innerHTML = url
+      ? '<img src="'+esc(url)+'" alt="'+esc(e.name)+'" onerror="this.outerHTML=\'<div class=&quot;noimg&quot;>'+esc(TYPE_GLYPH[e.type]||"録")+'</div>\'">'
+      : '<div class="noimg">'+esc(TYPE_GLYPH[e.type]||"録")+'</div>';
+    var spec="";
+    if(e.type==="weapon"){
+      var rows="";
+      if(e.bearer) rows+='<div class="row"><span class="lk">Bearer</span><span>'+esc(e.bearer)+'</span></div>';
+      if(e.domain) rows+='<div class="row"><span class="lk">Domain</span><span>'+esc(e.domain)+'</span></div>';
+      if(rows) spec='<div class="m-spec">'+rows+'</div>';
+    }
+    document.getElementById("m-body").innerHTML =
+      '<div class="m-ty">'+esc(e.series||TYPE_LABEL[e.type]||"")+'</div>'
+      +'<div class="m-nm">'+esc(e.name)+(e.kanji?' <span style="font-family:\'Noto Serif JP\';font-size:18px;color:var(--gold-dim)">'+esc(e.kanji)+'</span>':'')+'</div>'
+      +(e.lit?'<div class="m-lit">'+esc(e.lit)+'</div>':'')
+      +spec
+      +'<div class="m-bio">'+esc(e.bio||"")+'</div>';
+    document.getElementById("modalbg").classList.add("open");
+  }
+  function closeModal(){ document.getElementById("modalbg").classList.remove("open"); }
+
+  function buildPills(){
+    var p=document.getElementById("pills");
+    p.innerHTML=TYPES.map(function(t){return '<button class="pill'+(t[0]===filter?' active':'')+'" data-f="'+t[0]+'">'+esc(t[1])+'</button>';}).join("");
+    p.querySelectorAll(".pill").forEach(function(b){ b.addEventListener("click",function(){filter=b.getAttribute("data-f");buildPills();render();}); });
+  }
+
+  // controls
+  document.getElementById("reveal").addEventListener("click",function(){
+    var nv=!revealAll(); setReveal(nv); this.classList.toggle("on",nv); this.textContent=nv?"Hide undiscovered":"Reveal all"; render();
+  });
+  document.getElementById("reset").addEventListener("click",function(){
+    if(confirm("Reset your discoveries? This clears what reading has unlocked on this device.")){
+      try{localStorage.removeItem(KEY);localStorage.removeItem(REVEAL_KEY);}catch(e){}
+      document.getElementById("reveal").classList.remove("on"); document.getElementById("reveal").textContent="Reveal all"; render();
+    }
+  });
+  document.getElementById("mclose").addEventListener("click",closeModal);
+  document.getElementById("modalbg").addEventListener("click",function(e){ if(e.target===this) closeModal(); });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeModal(); });
+
+  Promise.all([
+    fetch("codex.json").then(function(r){return r.json();}),
+    fetch("glossary.json").then(function(r){return r.json();}).catch(function(){return null;})
+  ]).then(function(res){
+    CODEX=res[0]; GLOSS=res[1];
+    if(revealAll()){ var rb=document.getElementById("reveal"); rb.classList.add("on"); rb.textContent="Hide undiscovered"; }
+    buildPills(); render();
+  }).catch(function(){
+    document.getElementById("codex").innerHTML='<div class="empty">The codex could not be loaded. (On the live site this reads codex.json; opening the file directly from disk will block the fetch.)</div>';
+  });
+})();
+</script>
+</body>
+</html>

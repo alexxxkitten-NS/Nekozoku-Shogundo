@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫族将軍道 — Lexicon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070f; --bg2:#0d0d1a; --bg3:#12121f;
+  --gold:#c8ab6a; --gold-dim:#7a6535;
+  --violet:#8955be; --teal:#38b8b8;
+  --text:#dfd5c2; --text-dim:#887d6c;
+  --rule:rgba(200,171,106,.15);
+  --card-bg:#0f0f1c; --card-hover:#161628;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"EB Garamond",Georgia,serif; font-size:16px; line-height:1.7;
+  min-height:100vh; overflow-x:hidden; padding-bottom:54px;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.6;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ── */
+.site-header{
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 40px; border-bottom:1px solid var(--rule);
+  background:rgba(7,7,15,.95); backdrop-filter:blur(12px);
+}
+.header-brand{display:flex; align-items:center; gap:16px}
+.header-jp{
+  font-family:"Noto Serif JP",serif; font-weight:700; font-size:22px;
+  background:linear-gradient(135deg,#f0dfa8,#c8ab6a,#8a6535);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 20px rgba(200,171,106,.3));
+}
+.header-en{font-family:"Cinzel",serif; font-size:10px; letter-spacing:.4em; color:var(--gold-dim); opacity:.7}
+.header-label{font-family:"Cinzel",serif; font-size:9px; letter-spacing:.5em; color:var(--teal); opacity:.6; text-transform:uppercase}
+
+/* ── INTRO ── */
+.intro{position:relative; z-index:10; padding:30px 40px 6px; max-width:900px}
+.intro h1{font-family:"Cinzel",serif; font-weight:500; font-size:20px; letter-spacing:.18em; color:var(--gold); margin-bottom:8px}
+.intro p{color:var(--text-dim); font-style:italic; max-width:680px}
+
+/* ── CONTROLS ── */
+.controls{position:relative; z-index:10; padding:22px 40px 8px; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+.search-wrap{position:relative; flex:1; min-width:200px; max-width:400px}
+.search-wrap input{
+  width:100%; background:var(--bg3); border:1px solid var(--rule); color:var(--text);
+  font-family:"EB Garamond",serif; font-size:15px; padding:10px 16px 10px 40px; outline:none; transition:border-color .2s;
+}
+.search-wrap input:focus{border-color:var(--gold-dim)}
+.search-wrap::before{content:"⌕"; position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--gold-dim); font-size:18px; pointer-events:none}
+.search-wrap input::placeholder{color:var(--text-dim)}
+.filter-pills{display:flex; gap:8px; flex-wrap:wrap}
+.pill{
+  font-family:"Cinzel",serif; font-size:9px; letter-spacing:.3em; padding:7px 16px;
+  border:1px solid var(--rule); color:var(--text-dim); cursor:pointer; background:transparent;
+  transition:all .2s; text-transform:uppercase;
+}
+.pill:hover{border-color:var(--gold-dim); color:var(--gold)}
+.pill.active{border-color:var(--gold); color:var(--gold); background:rgba(200,171,106,.06)}
+
+/* ── GLOSSARY BODY ── */
+main{position:relative; z-index:10; padding:18px 40px 60px; max-width:1000px}
+.cat-block{margin-top:34px}
+.cat-head{display:flex; align-items:center; gap:18px; margin-bottom:14px}
+.cat-head h2{font-family:"Cinzel",serif; font-weight:700; font-size:11px; letter-spacing:.5em; color:var(--teal); text-transform:uppercase; white-space:nowrap}
+.cat-head .line{flex:1; height:1px; background:var(--rule)}
+.cat-head .count{font-family:"Cinzel",serif; font-size:9px; letter-spacing:.2em; color:var(--text-dim)}
+
+.entry{
+  border-left:2px solid transparent; padding:13px 18px; margin-bottom:6px;
+  background:var(--card-bg); transition:background .18s,border-color .18s; scroll-margin-top:80px;
+}
+.entry:hover{background:var(--card-hover); border-left-color:var(--gold-dim)}
+.entry:target{border-left-color:var(--gold); background:var(--card-hover)}
+.entry .term{font-family:"Cinzel",serif; font-size:15px; letter-spacing:.04em; color:var(--gold); font-weight:500}
+.entry .lit{font-style:italic; color:var(--violet); opacity:.85; font-size:14px; margin-left:10px}
+.entry .def{margin-top:5px; color:var(--text)}
+
+.empty{padding:60px 18px; text-align:center; color:var(--text-dim); font-style:italic}
+
+/* ── NAV ── */
+.site-nav{position:fixed; bottom:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:center; background:rgba(7,7,15,.96); backdrop-filter:blur(12px); border-top:1px solid rgba(200,171,106,.15); height:54px}
+.nav-link{display:flex; align-items:center; gap:10px; padding:0 clamp(16px,3.4vw,46px); height:100%; text-decoration:none; transition:background .2s}
+.nav-link:hover,.nav-link.active{background:rgba(200,171,106,.07)}
+.nav-kanji{font-family:"Noto Serif JP",serif; font-size:18px; color:var(--gold); opacity:.6; line-height:1; transition:opacity .2s}
+.nav-label{font-family:"Cinzel",serif; font-size:9px; letter-spacing:.4em; color:var(--gold-dim); text-transform:uppercase; transition:color .2s}
+.nav-link:hover .nav-kanji,.nav-link.active .nav-kanji{opacity:1}
+.nav-link:hover .nav-label,.nav-link.active .nav-label{color:var(--gold)}
+.nav-divider{width:1px; height:22px; background:rgba(200,171,106,.12); flex-shrink:0}
+
+@media(max-width:640px){
+  .site-header{padding:16px 20px}
+  .intro,.controls{padding-left:20px; padding-right:20px}
+  main{padding-left:20px; padding-right:20px}
+  .nav-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-brand">
+    <div>
+      <div class="header-jp">猫族将軍道</div>
+      <div class="header-en">NEKOZOKU SHŌGUNDŌ</div>
+    </div>
+    <div class="header-label">Lexicon</div>
+  </div>
+</header>
+
+<section class="intro">
+  <h1>The Lexicon</h1>
+  <p>The coined words of the Shōgunate — its measures of time, its powers and weapons, its peoples and places. Search a term, or filter by kind. Throughout the chapters these words are linked on first use, so a definition is always a touch away.</p>
+</section>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search the lexicon…" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="filter-pills" id="pills"></div>
+</div>
+
+<main id="glossary"><div class="empty">Loading the lexicon…</div></main>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-link" id="nav-home"><span class="nav-kanji">家</span><span class="nav-label">Home</span></a>
+  <div class="nav-divider"></div>
+  <a href="chapter_one.html" class="nav-link" id="nav-chapter"><span class="nav-kanji">一</span><span class="nav-label">Chapter One</span></a>
+  <div class="nav-divider"></div>
+  <a href="library.html" class="nav-link" id="nav-library"><span class="nav-kanji">蔵</span><span class="nav-label">Library</span></a>
+  <div class="nav-divider"></div>
+  <a href="glossary.html" class="nav-link active" id="nav-glossary"><span class="nav-kanji">語</span><span class="nav-label">Lexicon</span></a>
+</nav>
+
+<script>
+(function(){
+  var DATA=null, activeCat="All", q="";
+  var elGloss=document.getElementById("glossary");
+  var elSearch=document.getElementById("search");
+  var elPills=document.getElementById("pills");
+
+  function slugifyText(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
+  function esc(s){return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+  function render(){
+    if(!DATA){return;}
+    var cats=DATA._meta.categories;
+    var terms=DATA.terms.slice().sort(function(a,b){return a.term.toLowerCase().localeCompare(b.term.toLowerCase());});
+    var ql=q.trim().toLowerCase();
+    var html="", shown=0;
+    cats.forEach(function(cat){
+      if(activeCat!=="All" && activeCat!==cat) return;
+      var inCat=terms.filter(function(t){
+        if(t.category!==cat) return false;
+        if(!ql) return true;
+        return (t.term.toLowerCase().indexOf(ql)>-1)
+            || (t.lit&&t.lit.toLowerCase().indexOf(ql)>-1)
+            || (t.def.toLowerCase().indexOf(ql)>-1);
+      });
+      if(!inCat.length) return;
+      shown+=inCat.length;
+      html+='<div class="cat-block"><div class="cat-head"><h2>'+esc(cat)+'</h2><div class="line"></div><div class="count">'+inCat.length+'</div></div>';
+      inCat.forEach(function(t){
+        html+='<div class="entry" id="'+esc(t.slug)+'">'
+            +  '<span class="term">'+esc(t.term)+'</span>'
+            +  (t.lit?'<span class="lit">'+esc(t.lit)+'</span>':'')
+            +  '<div class="def">'+esc(t.def)+'</div>'
+            +  '</div>';
+      });
+      html+='</div>';
+    });
+    elGloss.innerHTML = shown ? html : '<div class="empty">No entries match that.</div>';
+    if(location.hash){var tgt=document.getElementById(location.hash.slice(1)); if(tgt) tgt.scrollIntoView();}
+  }
+
+  function buildPills(){
+    var cats=["All"].concat(DATA._meta.categories);
+    elPills.innerHTML=cats.map(function(c){
+      return '<button class="pill'+(c===activeCat?' active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>';
+    }).join("");
+    Array.prototype.forEach.call(elPills.querySelectorAll(".pill"),function(p){
+      p.addEventListener("click",function(){activeCat=p.getAttribute("data-cat"); buildPills(); render();});
+    });
+  }
+
+  elSearch.addEventListener("input",function(){q=elSearch.value; render();});
+
+  fetch("glossary.json").then(function(r){return r.json();}).then(function(d){
+    DATA=d; buildPills(); render();
+  }).catch(function(e){
+    elGloss.innerHTML='<div class="empty">The lexicon could not be loaded. (On a live server this reads glossary.json; opening the file directly from disk will block the fetch.)</div>';
+  });
+})();
+</script>
+</body>
+</html>
