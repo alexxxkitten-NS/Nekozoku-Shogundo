@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫族将軍道 — Production Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07070f;
+  --bg2:      #0d0d1a;
+  --bg3:      #12121f;
+  --gold:     #c8ab6a;
+  --gold-dim: #7a6535;
+  --violet:   #8955be;
+  --teal:     #38b8b8;
+  --text:     #dfd5c2;
+  --text-dim: #887d6c;
+  --rule:     rgba(200,171,106,.15);
+  --card-bg:  #0f0f1c;
+  --card-hover: #161628;
+
+  /* YOUR IMAGEKIT ENDPOINT — update this if it ever changes */
+  --ik-base: "https://ik.imagekit.io/xzzl7ab2e";
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: .6;
+}
+
+/* ── HEADER ─────────────────────────── */
+.site-header {
+  position: relative; z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--rule);
+  background: rgba(7,7,15,.95);
+  backdrop-filter: blur(12px);
+  position: sticky; top: 0;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-jp {
+  font-family: "Noto Serif JP", serif;
+  font-weight: 700;
+  font-size: 22px;
+  background: linear-gradient(135deg, #f0dfa8, #c8ab6a, #8a6535);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 20px rgba(200,171,106,.3));
+}
+
+.header-en {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  letter-spacing: .4em;
+  color: var(--gold-dim);
+  opacity: .7;
+}
+
+.header-label {
+  font-family: "Cinzel", serif;
+  font-size: 9px;
+  letter-spacing: .5em;
+  color: var(--teal);
+  opacity: .6;
+  text-transform: uppercase;
+}
+
+/* ── SEARCH + FILTER BAR ─────────────── */
+.controls {
+  position: relative; z-index: 10;
+  padding: 28px 40px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.search-wrap input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--rule);
+  color: var(--text);
+  font-family: "EB Garamond", serif;
+  font-size: 15px;
+  padding: 10px 16px 10px 40px;
+  outline: none;
+  transition: border-color .2s;
+}
+
+.search-wrap input:focus {
+  border-color: var(--gold-dim);
+}
+
+.search-wrap::before {
+  content: "⌕";
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-dim);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.search-wrap input::placeholder { color: var(--text-dim); }
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-family: "Cinzel", serif;
+  font-size: 9px;
+  letter-spacing: .35em;
+  padding: 7px 16px;
+  border: 1px solid var(--rule);
+  color: var(--text-dim);
+  cursor: pointer;
+  background: transparent;
+  transition: all .2s;
+  text-transform: uppercase;
+}
+
+.pill:hover { border-color: var(--gold-dim); color: var(--gold); }
+.pill.active { border-color: var(--gold); color: var(--gold); background: rgba(200,171,106,.06); }
+
+/* ── SECTION TITLES ─────────────────── */
+.section-title {
+  position: relative; z-index: 10;
+  padding: 32px 40px 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.section-title h2 {
+  font-family: "Cinzel", serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5em;
+  color: var(--gold);
+  opacity: .8;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* ── IMAGE GRID ─────────────────────── */
+.grid-wrap {
+  position: relative; z-index: 10;
+  padding: 0 40px 48px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* ── IMAGE CARD ─────────────────────── */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  overflow: hidden;
+  position: relative;
+}
+
+.card:hover {
+  border-color: var(--gold-dim);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.4), 0 0 20px rgba(200,171,106,.06);
+  background: var(--card-hover);
+}
+
+.card-img {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  background: var(--bg3);
+  transition: opacity .3s;
+}
+
+.card-img.landscape {
+  aspect-ratio: 16/9;
+  object-position: center;
+}
+
+.card-img.square {
+  aspect-ratio: 1/1;
+  object-position: center;
+}
+
+.card-info {
+  padding: 12px 14px;
+  border-top: 1px solid var(--rule);
+}
+
+.card-name {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  letter-spacing: .3em;
+  color: var(--gold);
+  opacity: .85;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-tag {
+  font-family: "EB Garamond", serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.card-status {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-family: "Cinzel", serif;
+  font-size: 7px;
+  letter-spacing: .3em;
+  padding: 3px 8px;
+  background: rgba(7,7,15,.85);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  opacity: .8;
+}
+
+/* ── LIGHTBOX ───────────────────────── */
+#lightbox {
+  position: fixed; inset: 0;
+  background: rgba(4,4,10,.92);
+  backdrop-filter: blur(16px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+#lightbox.open { display: flex; }
+
+.lb-inner {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+#lb-img {
+  max-width: 65vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border: 1px solid var(--rule);
+  box-shadow: 0 0 80px rgba(0,0,0,.7);
+}
+
+.lb-meta {
+  min-width: 240px;
+  max-width: 280px;
+  padding-top: 8px;
+}
+
+.lb-name {
+  font-family: "Cinzel", serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.lb-series {
+  font-family: "EB Garamond", serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.lb-notes {
+  font-family: "EB Garamond", serif;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.75;
+}
+
+.lb-url {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.lb-url label {
+  font-family: "Cinzel", serif;
+  font-size: 8px;
+  letter-spacing: .4em;
+  color: var(--teal);
+  opacity: .7;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.lb-url-text {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  word-break: break-all;
+  background: var(--bg3);
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.lb-url-text:hover {
+  border-color: var(--gold-dim);
+  color: var(--text);
+}
+
+.lb-close {
+  position: absolute;
+  top: -14px; right: -14px;
+  width: 32px; height: 32px;
+  background: var(--bg2);
+  border: 1px solid var(--rule);
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s, color .2s;
+  line-height: 1;
+}
+
+.lb-close:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+/* ── UPLOAD NOTICE ───────────────────── */
+.upload-notice {
+  position: relative; z-index: 10;
+  text-align: center;
+  padding: 80px 40px;
+  color: var(--text-dim);
+}
+
+.upload-notice .icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  opacity: .3;
+}
+
+.upload-notice p {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  letter-spacing: .4em;
+  color: var(--gold-dim);
+  opacity: .5;
+  margin-bottom: 8px;
+}
+
+.upload-notice small {
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* ── FOOTER ──────────────────────────── */
+footer {
+  position: relative; z-index: 10;
+  text-align: center;
+  padding: 32px 40px;
+  border-top: 1px solid var(--rule);
+  font-size: 11px;
+  color: var(--text-dim);
+  opacity: .4;
+  font-style: italic;
+}
+
+/* ── LOADING STATE ───────────────────── */
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-family: "Cinzel", serif;
+  font-size: 9px;
+  letter-spacing: .5em;
+  color: var(--gold-dim);
+  opacity: .5;
+}
+
+/* ── RESPONSIVE ──────────────────────── */
+@media (max-width: 600px) {
+  .site-header { padding: 16px 20px; }
+  .controls { padding: 20px 20px 16px; }
+  .grid-wrap { padding: 0 20px 40px; }
+  .section-title { padding: 24px 20px 12px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  .lb-inner { flex-direction: column; }
+  #lb-img { max-width: 85vw; }
+  .lb-meta { min-width: unset; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-brand">
+    <div>
+      <div class="header-jp">猫族将軍道</div>
+      <div class="header-en">NEKOZOKU SHŌGUNDŌ</div>
+    </div>
+    <div class="header-label">Production Library</div>
+  </div>
+  <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;color:var(--teal);opacity:.5;">
+    INTERNAL USE
+  </div>
+</header>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search assets..." autocomplete="off">
+  </div>
+  <div class="filter-pills">
+    <button class="pill active" data-filter="all">All</button>
+    <button class="pill" data-filter="characters">Characters</button>
+    <button class="pill" data-filter="nekojin">Nekojin</button>
+    <button class="pill" data-filter="darkpack">DarkPack</button>
+    <button class="pill" data-filter="cards">Cards</button>
+    <button class="pill" data-filter="weapons">Weapons</button>
+    <button class="pill" data-filter="masks">Masks</button>
+    <button class="pill" data-filter="environments">Environments</button>
+    <button class="pill" data-filter="reference">Reference</button>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery-root"></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lb-inner">
+    <img id="lb-img" src="" alt="">
+    <div class="lb-meta">
+      <div class="lb-name" id="lb-name"></div>
+      <div class="lb-series" id="lb-series"></div>
+      <div class="lb-notes" id="lb-notes"></div>
+      <div class="lb-url">
+        <label>Image URL · click to copy</label>
+        <div class="lb-url-text" id="lb-url-text" onclick="copyUrl(this)"></div>
+      </div>
+    </div>
+    <button class="lb-close" id="lb-close">×</button>
+  </div>
+</div>
+
+<footer>
+  猫族将軍道 &nbsp;·&nbsp; Nekozoku Shōgundō Production Library &nbsp;·&nbsp; Internal Use Only
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIGURATION
+// ─────────────────────────────────────────────
+const IK_BASE = "https://ik.imagekit.io/xzzl7ab2e";
+
+// ─────────────────────────────────────────────
+// ASSET MANIFEST
+// Add entries here as you upload images to ImageKit.
+// path: the path after your endpoint URL
+// name: display name
+// series: subtitle / faction / series label
+// notes: canonical notes shown in lightbox
+// cat: category tag (matches filter pills)
+// aspect: "portrait" | "landscape" | "square"
+// status: optional badge ("LOCKED" | "PENDING" etc)
+//
+// NOTE: The galaxy and Tamashii-system images live on the Cosmos page
+// (cosmos.html), not here — that keeps them in one place only.
+// ─────────────────────────────────────────────
+const ASSETS = [
+
+  // ── ROYAL HOUSE CHARACTERS ──────────────────
+  {
+    path: "/Queen%20Byakko.jpg",
+    name: "Queen Byakko — Card",
+    series: "Nekojin Collector Card",
+    notes: "Queen of the Nekozoku. Sovereign Protector of the Galaxy. Slayer of Fahng. Savior of the 9 Capitals. And yes — it goes on. Before the public she rises to every occasion in her properly refined and perfectly measured demeanor, as her role demands. Privately she is a loving and faithful sister and leader of her talented and unique inner circle.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Queen%20Byakko%20Portrait%201.jpg",
+    name: "Queen Byakko — Portrait",
+    series: "Royal House · Nekozoku",
+    notes: "Close portrait reference. 22 ages. The smile behind the mask. Four ears visible.",
+    cat: ["characters","reference"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Byakko%202H%20Stance%201.jpg",
+    name: "Byakko — Two Hand Stance",
+    series: "Royal House · Nekozoku",
+    notes: "Byakko in full dual wield stance — Ichi and Zero both drawn and extended, dimensional spectrum alive across both blades. Wide combat stance. This is what the enemy sees in the last moment they see anything. White Shogunate plate, white Noh mask, both weapons reading their teal-violet-white spectrum simultaneously.",
+    cat: ["characters","reference","cards"],
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Wide%20Byakko.jpg",
+    name: "Byakko — Wide Shot",
+    series: "Limited Special Edition · 16:9",
+    notes: "LSE card format reference. Full body combat pose. White and gold border. 虎 medallion. Clan mon.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Princess%20Yuki.jpg",
+    name: "Princess Yuki — Card",
+    series: "Nekojin Collector Card",
+    notes: "Princess of the Realm. Wielder of Jinsei. Hero of Karkanda Forest. Champion of the Queen and General of the Frontier Armies. Her youth is no measure of her capability. She was born for this. Adoringly loyal to her people.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Wide%20Yuki.jpg",
+    name: "Yuki — Wide Shot",
+    series: "Limited Special Edition · 16:9",
+    notes: "LSE card format reference. Full combat stance. Jinsei extended. Green dissolution active. Palace exterior background.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Yuki%20and%20Jensai.jpg",
+    name: "Yuki and Jinsei",
+    series: "Royal House · Nekozoku",
+    notes: "Princess Yuki in full combat extension with Jinsei — the Seventh Weapon — alive and trailing Flora dissolution across the full three meter blade. This is what the frontier sees before it falls. White Shogunate plate, emerald Noh mask, orange tassels. Flora mode active.",
+    cat: ["characters","reference","weapons"],
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Byakko%20and%20Yuki%20Pounce%201%20.jpg",
+    name: "Byakko and Yuki — Pounce",
+    series: "Royal House · Nekozoku",
+    notes: "Both sisters in combat. Action reference. Sixteen years of moving together expressed in a single shared decision.",
+    cat: ["characters","reference","cards"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Byakko%20and%20Yuki%20Court%201.jpg",
+    name: "Byakko and Yuki — Court",
+    series: "Royal House · Nekozoku",
+    notes: "Both sisters in court setting. Formal reference. The fixed point and her princess. Mu between them.",
+    cat: ["characters","reference","cards"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Yamaneko.jpg",
+    name: "Yamaneko — Card",
+    series: "Nekojin Collector Card",
+    notes: "'Aka' Yama. Cousin to the Queen and Princess. Highest ranking male Nekojin. His weapon is beyond mysterious and powerful. A fierce warrior and brilliant general — leads the Trio on covert operations and commands the Army on a daily basis.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Arashi.jpg",
+    name: "Arashi — Card",
+    series: "Nekojin Collector Card",
+    notes: "Weapons master to House Nekojin. Bakeneko and ancient. Knows history at the deepest levels — wise beyond measure. Blind, but sees more than most. Kaze: double-ended tanto, opposing edges, one blade usually sheathed.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Shiro.jpg",
+    name: "Shiro — Card",
+    series: "Nekojin Collector Card",
+    notes: "Bakeneko spymaster. White hair with pastel blue highlights. Geisha white makeup. Black and white kimono business suit. Kasumi weapon system. Ran the classified op that allowed Byakko's mother to escape.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Mu.jpg",
+    name: "Mu — Card",
+    series: "Nekojin Collector Card",
+    notes: "Faithful family pet. With a remarkably long lifespan.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+
+  // ── HOUSEHOLD · SCHOLARS · HEALERS ──────────
+  {
+    path: "/Hakase%20Ren.jpg",
+    name: "Hakase Ren — Card",
+    series: "Usagizoku · Scholar · 知の守人",
+    notes: "知 — Guardian of Knowledge. A Usagi master of the Oumura Library and of the pre-ancient data language older than a trillion ages, now beginning to answer. An old acquaintance of the Queen from the Fahng years. Creed: knowledge is protection, not control. The one being hunted across the frontier by forces that have seized what he keeps and cannot read it without him.",
+    cat: ["cards","characters"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Kit%20Kiko.jpg",
+    name: "Kit Kiko — Card",
+    series: "Kitsune · House Steward · 家令の狐",
+    notes: "狐 — Kit, the MajoDomo: the Fox Steward of the House. A three-tailed kitsune woman in layered gold, blue, and crimson robes, beneath a fox mon. Keeper of the royal household — she sets a dozen small things right before anyone thinks to ask, and always knows a little more than she has been told.",
+    cat: ["cards","characters"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Isha%20Riki.jpg",
+    name: "Isha Riki — Card",
+    series: "Healer · Apothecary · 薬師",
+    notes: "薬 — the court physician, of the Mangusuzoku: a people born to teeth, as the Nekozoku are, and like them never made to run in any pack — a rare kinship. The benign master of the molecular healing art, and the exact counterpart to its dark inversion. Mortar and pestle, labeled jars, fine spectacles; there is nothing in a cup she cannot name before it is raised.",
+    cat: ["cards","characters"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+
+  // ── THE TRIO ────────────────────────────────
+  {
+    path: "/Mineko.jpg",
+    name: "Mineko — Card",
+    series: "Nekojin Collector Card",
+    notes: "Born without sight — never wounded; born so. Found, saved, and raised by Arashi. Where sight would sit, dimensional perception sits instead — innate, not lost and replaced. Gold Noh cat mask, navy braided cord across the eyes — ceremonial focus, not a covering. Techū bow — the arrow arrives, it doesn't travel. Two auburn tails, each its own dimensional frequency; the interference pattern gives dimensional depth perception. The Trio's outward voice.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Kikaneko.jpg",
+    name: "Kikaneko — Card",
+    series: "Nekojin Collector Card",
+    notes: "Born without hearing — never wounded; born so. Found and raised by Arashi alongside her sisters. Resonance sits where hearing would: she hears dimensions pressing against each other, and the frequency of a lie. One with an Ascended — bonded so completely she carries no weapon-object; her art is the yielding way, Jigen-Jitsu made flesh in motion. Blue Noh cat mask, navy cord across the ears — ceremonial. Two blonde tails, dual dimensional frequency reading resonance interference.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Iwaneko.jpg",
+    name: "Iwaneko — Card",
+    series: "Nekojin Collector Card",
+    notes: "Born without voice — never wounded; born so. Found and raised by Arashi. Where voice would sit, the energy went to ending. Red Noh cat mask, navy cord across the mouth — ceremonial. Yōgantō, the lava greatsword — it does not cut, it ends; its fissure-cracks are true dimensional tears. Two jet-black tails, dual conduits doubling the weapon's reach. Yōgantō speaks so she doesn't have to.",
+    cat: ["cards","characters","nekojin"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+
+  // ── DARKPACK ────────────────────────────────
+  {
+    path: "/Alpha%20Rex.jpg",
+    name: "Alpha Rex — Card",
+    series: "DarkPack Collector Card · Alpha Rex",
+    notes: "Hope. Destroyed his face. Regret. Feeds the future. He knows he is right and he will destroy the universe to prove it.",
+    cat: ["cards","characters","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Beta%20Kijo.jpg",
+    name: "Beta Kijo — Card",
+    series: "DarkPack Collector Card · Beta Kijo",
+    notes: "Earned her place on the battlefield and in Rex's heart — when he had one. Fearless and loyal. The DarkPack are her pups.",
+    cat: ["cards","characters","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Thinker%20Xort.jpg",
+    name: "Thinker Xort — Card",
+    series: "DarkPack Collector Card · Thinker Xort",
+    notes: "Intelligence chief. Ferret. Human face, dark eye mask skin marking, small rounded ears. Red cybernetic eye through goggles. Black outfit. Targeting Risu farms. Cold, calculating, contemptuous. Already knows what you're going to do before you do it.",
+    cat: ["cards","characters","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Speaker%20Vox.jpg",
+    name: "Speaker Vox — Card",
+    series: "DarkPack Collector Card · Speaker Vox",
+    notes: "Propagandist. Pomeranian. 1m tall, human-proportioned head and hands. True believer. Red cybernetic eye with scarring. Instinct for the howling point. An ass-licking sycophant with a gift — the most dangerous kind.",
+    cat: ["cards","characters","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/General%20Duuk.jpg",
+    name: "General Duuk — Card",
+    series: "DarkPack Collector Card · General Duuk",
+    notes: "Rex's Chancellor and most devoted commander. Mauve armor. Dual Sai. Notoriously cruel to subjugated species. Vocal advocate for overturning the Prey Species Edict — believes prey species have no place in the new order Rex is building.",
+    cat: ["cards","characters","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Kage.jpg",
+    name: "Kage — Card",
+    series: "DarkPack Collector Card · Kage",
+    notes: "Lycan Galactic Pack Intelligence operative assigned to the DarkPack. Black and acid-green Lycan field uniform. Lycan Secret Police Unit Three.",
+    cat: ["cards","characters","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+  {
+    path: "/Vrack%20Roak.jpg",
+    name: "Vrach Roak — Card",
+    series: "DarkPack · 拷問医 (Interrogation-Medic)",
+    notes: "医 — the dark inversion of the healer: the DarkPack's interrogation-doctor. The same molecular mastery as Isha Riki, turned upon the unwilling. Red-and-black horror frame, distinct from the gold household cards. Speaks of himself only in a detached 'we,' never 'I'; empathically void, a reptilian disconnect — a body is a phenomenon to him, of interest only in how it fails. Kept deliberately by Beta Kijo as an instrument of pack control.",
+    cat: ["cards","darkpack"],
+    aspect: "portrait",
+    status: "LOCKED"
+  },
+
+  // ── WEAPONS ─────────────────────────────────
+  {
+    path: "/Ichi_Zero.jpg",
+    name: "Ichi and Zero",
+    series: "Twin Katana · Byakko · Nine Weapons",
+    notes: "Physically identical. Teal-violet-white spectrum. Zero on the left scabbard, Ichi on the right. Draw by reaching for the ears. Full rainbow spectrum unlocks in final Rex battle. Only Byakko knows which is which. Has never told anyone.",
+    cat: ["weapons","reference"],
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Jinsei.jpg",
+    name: "Jinsei — Life",
+    series: "Seventh Weapon · Yuki · Nine Weapons",
+    notes: "Three meter curved No-Dachi. Flora mode: green cellular dissolution — accessible. Fauna mode: nature unrevealed, orange — not yet. Dual wield pending — she is sixteen. Jinsei arrives in this dimension. It doesn't travel.",
+    cat: ["weapons","reference"],
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Trooper%20weapon%201.jpg",
+    name: "Nekojin Trooper Weapon — Blade",
+    series: "Nekozoku · Military Equipment",
+    notes: "Nekojin trooper bladed weapon. Standard melee weapon carried by Shogunate military troopers.",
+    cat: ["weapons","reference"],
+    aspect: "portrait",
+    status: "REFERENCE"
+  },
+  {
+    path: "/Trooper%20weapon%202.jpg",
+    name: "Nekojin Trooper Weapon — Firearm",
+    series: "Nekozoku · Military Equipment",
+    notes: "Nekojin trooper projectile firearm. Standard ranged weapon carried by Shogunate military troopers.",
+    cat: ["weapons","reference"],
+    aspect: "portrait",
+    status: "REFERENCE"
+  },
+  {
+    path: "/Nekojin%20Troopers%201.jpg",
+    name: "Nekojin Troopers",
+    series: "Nekozoku · Military",
+    notes: "Nekojin military troopers. Shogunate army reference. Black Shogunate armor, clan mon, energy blade and projectile firearm.",
+    cat: ["reference","characters"],
+    aspect: "portrait",
+    status: "REFERENCE"
+  },
+
+  // ── ENVIRONMENTS ────────────────────────────
+  {
+    path: "/Tamashii%20Palace%20Throne%20Room%201.jpg",
+    name: "Throne Room",
+    series: "Tamashii Palace · Environment",
+    notes: "The throne room of the Nekozoku Shogunate. Amber lighting. Polished stone floors. Where Mu sits on the cushion. The seat of the civilization.",
+    cat: "environments",
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Tamashi%20Palace%20Nekozoku%20Information%20Bureau%201%20.jpg",
+    name: "Intelligence Bureau",
+    series: "Tamashii Palace · Environment",
+    notes: "The Nekozoku Intelligence Bureau. Briefing room. Where the Trio take their positions along the right wall. Where the network map resolves and re-resolves.",
+    cat: "environments",
+    aspect: "landscape",
+    status: "LOCKED"
+  },
+  {
+    path: "/Battle%20splash%20concept%201.jpg",
+    name: "Battle Splash Concept",
+    series: "Action · Concept Art",
+    notes: "Battle action concept. Kahvan-Da or frontier engagement reference.",
+    cat: ["environments","reference"],
+    aspect: "landscape",
+    status: "REFERENCE"
+  },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentFilter = "all";
+let currentSearch = "";
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function buildImageUrl(path) {
+  return IK_BASE + path;
+}
+
+function getFiltered() {
+  return ASSETS.filter(a => {
+    const cats = Array.isArray(a.cat) ? a.cat : [a.cat];
+    const matchCat = currentFilter === "all" || cats.includes(currentFilter);
+    const q = currentSearch.toLowerCase();
+    const matchSearch = !q ||
+      a.name.toLowerCase().includes(q) ||
+      a.series.toLowerCase().includes(q) ||
+      a.notes.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+}
+
+function groupByCategory(assets) {
+  const order = ["characters","nekojin","darkpack","cards","weapons","masks","environments","reference"];
+  const groups = {};
+  assets.forEach(a => {
+    const cats = Array.isArray(a.cat) ? a.cat : [a.cat];
+    const primaryCat = cats[0];
+    if (!groups[primaryCat]) groups[primaryCat] = [];
+    groups[primaryCat].push(a);
+  });
+  return order.filter(k => groups[k]).map(k => ({ key: k, items: groups[k] }));
+}
+
+const LABELS = {
+  characters:   "Characters",
+  nekojin:      "Nekojin",
+  darkpack:     "DarkPack",
+  cards:        "Collector Cards",
+  weapons:      "Weapons",
+  masks:        "Masks",
+  environments: "Environments",
+  reference:    "Reference",
+};
+
+function render() {
+  const root = document.getElementById("gallery-root");
+  const filtered = getFiltered();
+
+  if (!filtered.length) {
+    root.innerHTML = `<div class="upload-notice">
+      <div class="icon">◇</div>
+      <p>No assets found</p>
+      <small>Upload images to ImageKit and add them to the manifest above</small>
+    </div>`;
+    return;
+  }
+
+  const groups = currentFilter === "all"
+    ? groupByCategory(filtered)
+    : [{ key: currentFilter, items: filtered }];
+
+  root.innerHTML = groups.map(g => `
+    <div class="section-title"><h2>${LABELS[g.key] || g.key}</h2></div>
+    <div class="grid-wrap">
+      <div class="grid">
+        ${g.items.map((a, i) => `
+          <div class="card" onclick="openLightbox(${ASSETS.indexOf(a)})">
+            ${a.status ? `<div class="card-status">${a.status}</div>` : ""}
+            <img
+              class="card-img ${a.aspect === 'landscape' ? 'landscape' : a.aspect === 'square' ? 'square' : ''}"
+              src="${buildImageUrl(a.path)}"
+              alt="${a.name}"
+              loading="lazy"
+              onerror="this.style.opacity='.15';this.style.filter='grayscale(1)'"
+            >
+            <div class="card-info">
+              <div class="card-name">${a.name}</div>
+              <div class="card-tag">${a.series}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+}
+
+// ─────────────────────────────────────────────
+// LIGHTBOX
+// ─────────────────────────────────────────────
+function openLightbox(idx) {
+  const a = ASSETS[idx];
+  const url = buildImageUrl(a.path);
+  document.getElementById("lb-img").src = url;
+  document.getElementById("lb-name").textContent = a.name;
+  document.getElementById("lb-series").textContent = a.series;
+  document.getElementById("lb-notes").textContent = a.notes;
+  document.getElementById("lb-url-text").textContent = url;
+  document.getElementById("lightbox").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
+  document.body.style.overflow = "";
+  document.getElementById("lb-img").src = "";
+}
+
+function copyUrl(el) {
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const orig = el.textContent;
+    el.textContent = "Copied!";
+    setTimeout(() => el.textContent = orig, 1500);
+  });
+}
+
+document.getElementById("lb-close").addEventListener("click", closeLightbox);
+document.getElementById("lightbox").addEventListener("click", e => {
+  if (e.target === document.getElementById("lightbox")) closeLightbox();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeLightbox();
+});
+
+// ─────────────────────────────────────────────
+// FILTERS + SEARCH
+// ─────────────────────────────────────────────
+document.querySelectorAll(".pill").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById("search").addEventListener("input", e => {
+  currentSearch = e.target.value;
+  render();
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+render();
+</script>
+<nav class="site-nav">
+  <a href="index.html" class="nav-link" id="nav-home"><span class="nav-kanji">家</span><span class="nav-label">Home</span></a>
+  <div class="nav-divider"></div>
+  <a href="chapter_one.html" class="nav-link" id="nav-ch1"><span class="nav-kanji">一</span><span class="nav-label">Ch. I</span></a>
+  <div class="nav-divider"></div>
+  <a href="chapter_two.html" class="nav-link" id="nav-ch2"><span class="nav-kanji">二</span><span class="nav-label">Ch. II</span></a>
+  <div class="nav-divider"></div>
+  <a href="chapter_three.html" class="nav-link" id="nav-ch3"><span class="nav-kanji">三</span><span class="nav-label">Ch. III</span></a>
+  <div class="nav-divider"></div>
+  <a href="cosmos.html" class="nav-link" id="nav-cosmos"><span class="nav-kanji">宇</span><span class="nav-label">Cosmos</span></a>
+  <div class="nav-divider"></div>
+  <a href="library.html" class="nav-link active" id="nav-library"><span class="nav-kanji">蔵</span><span class="nav-label">Library</span></a>
+</nav>
+
+<style>
+.site-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(7,7,15,.96);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(200,171,106,.15);height:54px;
+}
+.nav-link{
+  display:flex;align-items:center;gap:10px;
+  padding:0 clamp(16px,3.5vw,46px);height:100%;
+  text-decoration:none;transition:background .2s;
+}
+.nav-link:hover,.nav-link.active{background:rgba(200,171,106,.07)}
+.nav-kanji{
+  font-family:"Noto Serif JP",serif;font-size:18px;
+  color:#c8ab6a;opacity:.6;line-height:1;transition:opacity .2s;
+}
+.nav-label{
+  font-family:"Cinzel",serif;font-size:9px;
+  letter-spacing:.4em;color:#7a6535;
+  text-transform:uppercase;transition:color .2s;
+}
+.nav-link:hover .nav-kanji,.nav-link.active .nav-kanji{opacity:1}
+.nav-link:hover .nav-label,.nav-link.active .nav-label{color:#c8ab6a}
+.nav-divider{width:1px;height:22px;background:rgba(200,171,106,.12);flex-shrink:0}
+body{padding-bottom:54px}
+</style>
+
+<script>
+(function(){
+  var page = window.location.pathname.split('/').pop() || 'index.html';
+  var map = {'index.html':'nav-home','chapter_one.html':'nav-chapter','library.html':'nav-library','cosmos.html':'nav-cosmos'};
+  var el = document.getElementById(map[page]);
+  if(el) el.classList.add('active');
+})();
+</script>
+</body>
+</html>
