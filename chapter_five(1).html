@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫族将軍道 — Chapter 5: Recovery; or, Rescue?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cinzel:wght@400;500;700&family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+JP:wght@200;300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06060e;--bg2:#0b0b18;--gold:#c8ab6a;--gold-dim:#7d6840;
+  --gold-pale:#f0dfa8;--gold-glow:rgba(200,171,106,.22);
+  --violet:#8955be;--violet-lo:rgba(137,85,190,.06);
+  --teal:#38b8b8;--teal-lo:rgba(56,184,184,.05);
+  --text:#dfd5c2;--text-dim:#887d6c;--rule:rgba(200,171,106,.15);
+  --em:#a8d0d0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:clamp(17px,1.45vw,21px);line-height:1.95;
+  overflow-x:hidden;padding-bottom:54px;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='.032'/%3E%3C/svg%3E");
+  opacity:.65;
+}
+#prog{
+  position:fixed;top:0;left:0;height:2px;width:0%;z-index:300;
+  background:linear-gradient(90deg,var(--teal),var(--violet),var(--gold));
+  box-shadow:0 0 12px rgba(137,85,190,.6);transition:width .07s linear;
+}
+.hero{
+  position:relative;z-index:10;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:80px 40px 100px;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-55%);width:80vmax;height:60vmax;
+  background:radial-gradient(ellipse,rgba(137,85,190,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-rings{
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;pointer-events:none;overflow:hidden;
+}
+.hero-rings svg{width:140vmax;height:140vmax;opacity:.055;animation:ringSpin 120s linear infinite;}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+.hero-kanji-bg{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:"Noto Serif JP",serif;font-weight:700;
+  font-size:clamp(180px,30vw,360px);line-height:1;color:transparent;
+  -webkit-text-stroke:1px rgba(200,171,106,.06);
+  user-select:none;pointer-events:none;white-space:nowrap;
+}
+.hero-label{font-family:"Cinzel",serif;font-size:clamp(9px,.9vw,11px);letter-spacing:.6em;color:var(--gold-dim);opacity:.75;margin-bottom:clamp(16px,2.5vw,28px);position:relative;z-index:1;animation:fadeUp .9s .1s ease both;}
+.hero-jp{font-family:"Noto Serif JP",serif;font-weight:700;font-size:clamp(48px,9vw,128px);line-height:1;letter-spacing:.1em;background:linear-gradient(160deg,var(--gold-pale) 0%,var(--gold) 45%,#a07828 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 40px rgba(200,171,106,.4)) drop-shadow(0 0 80px rgba(137,85,190,.15));position:relative;z-index:1;margin-bottom:clamp(14px,2vw,24px);animation:fadeUp 1.1s .2s ease both;}
+.hero-roman{font-family:"Cinzel Decorative",serif;font-size:clamp(12px,1.6vw,18px);letter-spacing:.28em;color:var(--gold);text-shadow:0 0 40px rgba(200,171,106,.2);position:relative;z-index:1;margin-bottom:clamp(24px,4vw,44px);animation:fadeUp .9s .45s ease both;}
+.hero-rule{display:flex;align-items:center;gap:14px;width:clamp(180px,28vw,340px);margin:0 auto clamp(20px,3vw,32px);position:relative;z-index:1;animation:fadeUp .8s .6s ease both;}
+.hero-rule::before,.hero-rule::after{content:"";flex:1;height:1px;}
+.hero-rule::before{background:linear-gradient(90deg,transparent,var(--gold-dim))}
+.hero-rule::after{background:linear-gradient(90deg,var(--gold-dim),transparent)}
+.hero-gem{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 16px rgba(200,171,106,.8);flex-shrink:0;}
+.hero-book{font-family:"EB Garamond",serif;font-style:italic;font-size:clamp(13px,1.4vw,17px);color:var(--text-dim);letter-spacing:.07em;position:relative;z-index:1;margin-bottom:8px;animation:fadeUp .8s .72s ease both;}
+.hero-tagline{font-family:"Cinzel",serif;font-size:clamp(8px,.75vw,10px);letter-spacing:.6em;color:var(--teal);opacity:.55;position:relative;z-index:1;animation:fadeUp .8s .85s ease both;}
+.hero-scroll{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.35;z-index:1;animation:fadeUp .8s 1.2s ease both,scrollPulse 2.6s 2s ease-in-out infinite;}
+.hero-scroll span{font-family:"Cinzel",serif;font-size:8px;letter-spacing:.5em;color:var(--gold-dim);}
+.hero-scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold-dim),transparent);}
+@keyframes scrollPulse{0%,100%{transform:translateX(-50%) translateY(0);opacity:.35}50%{transform:translateX(-50%) translateY(10px);opacity:.2}}
+.ch-header{position:relative;z-index:10;text-align:center;padding:clamp(60px,8vw,110px) 24px clamp(40px,5vw,70px);border-top:1px solid var(--rule);background:linear-gradient(to bottom,var(--bg) 0%,transparent 100%);}
+.ch-eyebrow{font-family:"Cinzel",serif;font-size:clamp(8px,.8vw,10px);letter-spacing:.6em;color:var(--teal);opacity:.75;margin-bottom:18px;}
+.ch-title{font-family:"Cinzel",serif;font-weight:500;font-size:clamp(20px,2.8vw,34px);letter-spacing:.2em;color:var(--text);}
+.ch-act{font-family:"Cinzel",serif;font-size:clamp(13px,1.4vw,18px);letter-spacing:.4em;color:var(--gold);opacity:.8;margin-top:16px;text-align:center;text-indent:.4em;}
+.ch-book{font-family:"Cinzel",serif;font-size:clamp(9px,.9vw,11px);letter-spacing:.4em;color:var(--gold-dim);opacity:.7;text-transform:uppercase;margin-bottom:22px;text-indent:.4em;}
+.chapter-nav{position:relative;z-index:10;max-width:min(900px,90vw);margin:clamp(34px,5vw,60px) auto clamp(70px,9vw,100px);display:flex;justify-content:space-between;gap:18px;padding:0 24px;}
+.cn-link{display:flex;flex-direction:column;gap:6px;text-decoration:none;border:1px solid var(--rule);padding:15px 22px;transition:border-color .2s,background .2s;max-width:48%;}
+.cn-link:hover{border-color:var(--gold-dim);background:rgba(200,171,106,.05);}
+.cn-next{text-align:right;margin-left:auto;}
+.cn-dir{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.3em;color:var(--teal);text-transform:uppercase;opacity:.75;}
+.cn-name{font-family:"Cinzel",serif;font-size:clamp(11px,1.1vw,14px);letter-spacing:.1em;color:var(--gold);}
+.prose{position:relative;z-index:10;max-width:min(1200px,90vw);margin:0 auto;padding:0 clamp(20px,5vw,60px) clamp(80px,10vw,160px);animation:fadeUp 1s .15s ease both;}
+p{margin-bottom:1.55em;text-align:justify;hyphens:auto}
+.prose > p:first-of-type::first-letter{font-family:"Cinzel",serif;font-weight:700;font-size:4.8em;line-height:.72;float:left;margin:.06em .09em -.02em 0;color:var(--gold);text-shadow:0 0 28px rgba(200,171,106,.35);}
+em{color:var(--em);font-style:italic}
+.scene-break{text-align:center;margin:clamp(34px,4vw,54px) 0;position:relative;}
+.scene-break::before,.scene-break::after{content:"";position:absolute;top:50%;width:calc(50% - 26px);height:1px;}
+.scene-break::before{left:0;background:linear-gradient(90deg,transparent,var(--gold-dim))}
+.scene-break::after{right:0;background:linear-gradient(90deg,var(--gold-dim),transparent)}
+.scene-break span{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.3em;color:var(--gold-dim);opacity:.5;position:relative;z-index:1;padding:0 9px;background:var(--bg);}
+.section-break{text-align:center;margin:clamp(60px,8vw,100px) 0 clamp(40px,5vw,70px);position:relative;}
+.section-break::before,.section-break::after{content:"";position:absolute;top:50%;width:calc(50% - 150px);height:1px;background:var(--rule);}
+.section-break::before{left:0}.section-break::after{right:0}
+.section-break span{font-family:"Cinzel",serif;font-weight:700;font-size:clamp(15px,1.7vw,23px);letter-spacing:.4em;color:var(--gold);opacity:.85;position:relative;z-index:1;padding:0 22px;background:var(--bg);}
+.ch-end{text-align:center;padding:clamp(60px,8vw,100px) 0 clamp(40px,5vw,60px);border-top:1px solid var(--rule);margin-top:clamp(40px,5vw,60px);}
+.ch-end .kanji{font-family:"Noto Serif JP",serif;font-weight:300;font-size:clamp(18px,2.5vw,28px);letter-spacing:.3em;color:var(--gold-dim);opacity:.55;margin-bottom:16px;}
+.ch-end .cont{font-family:"EB Garamond",serif;font-style:italic;font-size:clamp(14px,1.3vw,17px);color:var(--text-dim);letter-spacing:.06em;}
+footer{position:relative;z-index:10;text-align:center;padding:40px 24px;border-top:1px solid var(--rule);font-size:clamp(10px,.85vw,12px);color:var(--text-dim);opacity:.4;font-style:italic;line-height:1.85;}
+#btt{position:fixed;bottom:64px;right:36px;width:44px;height:44px;background:rgba(11,11,24,.92);border:1px solid var(--gold-dim);color:var(--gold);font-family:"Cinzel",serif;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s,border-color .2s,background .2s;z-index:50;text-decoration:none;backdrop-filter:blur(10px);}
+#btt.show{opacity:1;transform:translateY(0)}
+#btt:hover{background:rgba(200,171,106,.08);border-color:var(--gold)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+.ch-header{animation:fadeUp 1s ease both}
+@media(max-width:500px){body{font-size:16px}.hero{padding:60px 24px 80px;min-height:90vh}}
+
+/* Character links */
+.char-link{color:#c8ab6a;text-decoration:none;border-bottom:1px solid rgba(200,171,106,.55);cursor:pointer;transition:border-color .2s,color .2s;}
+.char-link:hover{border-color:rgba(200,171,106,.8);color:#e8d5a0;}
+
+/* Nav */
+.site-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(7,7,15,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(200,171,106,.15);height:54px;}
+.nav-link{display:flex;align-items:center;gap:10px;padding:0 clamp(20px,4vw,52px);height:100%;text-decoration:none;transition:background .2s;}
+.nav-link:hover,.nav-link.active{background:rgba(200,171,106,.07)}
+.nav-kanji{font-family:"Noto Serif JP",serif;font-size:18px;color:#c8ab6a;opacity:.6;line-height:1;transition:opacity .2s;}
+.nav-label{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.4em;color:#7a6535;text-transform:uppercase;transition:color .2s;}
+.nav-link:hover .nav-kanji,.nav-link.active .nav-kanji{opacity:1}
+.nav-link:hover .nav-label,.nav-link.active .nav-label{color:#c8ab6a}
+.nav-divider{width:1px;height:22px;background:rgba(200,171,106,.12);flex-shrink:0;}
+/* ===== Reading preferences toolbar + contents panel (added) ===== */
+:root{
+  --prose-size:clamp(20px,1.55vw,26px);
+  --prose-family:"EB Garamond",Georgia,serif;
+  --bar-h:50px;
+}
+.prose p{font-size:var(--prose-size);font-family:var(--prose-family);}
+html.links-off .char-link{border-bottom:none!important;color:inherit!important;cursor:text;pointer-events:none;}
+[id^="sec-"]{scroll-margin-top:72px;}
+
+.reader-bar{
+  position:sticky;top:0;z-index:200;display:flex;align-items:center;
+  background:rgba(7,7,15,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);height:var(--bar-h);
+  padding:0 14px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;
+  scrollbar-width:none;
+}
+.reader-bar::-webkit-scrollbar{display:none}
+.rb-status{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.22em;color:var(--gold-dim);text-transform:uppercase;flex-shrink:0;margin-right:auto;padding-right:18px;}
+.rb-status b{color:var(--gold);font-weight:500;}
+.rb-group{display:flex;align-items:center;gap:6px;flex-shrink:0;padding:0 12px;border-left:1px solid var(--rule);}
+.rb-cap{font-family:"Cinzel",serif;font-size:8px;letter-spacing:.3em;color:var(--text-dim);text-transform:uppercase;margin-right:4px;}
+.rb-btn{font-family:"Cinzel",serif;font-size:11px;letter-spacing:.04em;color:var(--gold-dim);background:transparent;border:1px solid var(--rule);border-radius:2px;min-width:26px;height:25px;padding:0 7px;cursor:pointer;transition:color .2s,border-color .2s,background .2s;display:inline-flex;align-items:center;justify-content:center;}
+.rb-btn:hover:not(:disabled){color:var(--gold);border-color:var(--gold-dim);}
+.rb-btn.on{color:var(--bg);background:var(--gold);border-color:var(--gold);}
+.rb-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+@media(max-width:560px){.rb-cap{display:none}.rb-status{padding-right:12px}}
+/* ===== Event staging strip (added) ===== */
+.event-strip{position:relative;z-index:10;max-width:min(1500px,94vw);margin:clamp(46px,6vw,86px) auto;padding:0 clamp(16px,4vw,40px);}
+.es-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.es-head::before,.es-head::after{content:"";height:1px;flex:1;background:var(--rule);}
+.es-kanji{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.45em;color:var(--teal);opacity:.7;text-transform:uppercase;flex-shrink:0;}
+.es-rail{display:flex;gap:clamp(14px,2vw,26px);overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scroll-snap-type:x proximity;}
+@media(min-width:1000px){.es-rail{justify-content:center}}
+.es-rail::-webkit-scrollbar{height:6px}
+.es-rail::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+.es-rail::-webkit-scrollbar-track{background:transparent}
+.es-frame{flex:0 0 auto;width:clamp(300px,28vw,480px);scroll-snap-align:start;margin:0;}
+.es-window{position:relative;aspect-ratio:16/10;border:1px solid var(--rule);background:rgba(13,13,26,.6);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:border-color .25s,transform .25s,box-shadow .25s;cursor:default;}
+.es-frame[data-img] .es-window{cursor:pointer;}
+.es-frame:hover .es-window{border-color:var(--gold-dim);transform:translateY(-3px);box-shadow:0 10px 34px rgba(0,0,0,.4);}
+.es-window img{width:100%;height:100%;object-fit:cover;display:block;}
+.es-ph{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.32em;color:var(--gold-dim);opacity:.5;text-transform:uppercase;text-align:center;padding:0 12px;}
+.es-cap{font-family:"EB Garamond",serif;font-style:italic;font-size:15px;line-height:1.5;color:var(--text-dim);margin-top:10px;letter-spacing:.02em;}
+@media(max-width:560px){.es-frame{width:80vw}}
+.es-frame.portrait{width:clamp(190px,18vw,300px);}
+.es-frame.portrait .es-window{aspect-ratio:3/4;}
+/* ===== Inline body illustrations (added) ===== */
+.body-illo{margin:clamp(44px,5.5vw,80px) auto;text-align:center;}
+.body-illo .illo-window{display:inline-block;max-width:100%;border:1px solid var(--rule);background:rgba(13,13,26,.5);overflow:hidden;cursor:pointer;transition:border-color .25s,box-shadow .25s;line-height:0;}
+.body-illo .illo-window:hover{border-color:var(--gold-dim);box-shadow:0 12px 44px rgba(0,0,0,.45);}
+.body-illo img{display:block;width:100%;height:auto;}
+.body-illo.land .illo-window{width:min(860px,100%);}
+.body-illo.port .illo-window{width:min(440px,82%);}
+.body-illo figcaption{font-family:"EB Garamond",serif;font-style:italic;font-size:15px;line-height:1.5;color:var(--text-dim);margin:12px auto 0;letter-spacing:.02em;max-width:620px;}
+</style>
+</head>
+<body>
+
+<script>
+(function(){try{
+  var r=document.documentElement;
+  var fs=localStorage.getItem('nss_fontSize'); if(fs)r.style.setProperty('--prose-size',fs);
+  var fam={garamond:'"EB Garamond",Georgia,serif',sans:'system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',mono:'ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace'};
+  var ff=localStorage.getItem('nss_fontFamily'); if(ff&&fam[ff])r.style.setProperty('--prose-family',fam[ff]);
+  if(localStorage.getItem('nss_links')==='off')r.classList.add('links-off');
+}catch(e){}})();
+</script>
+<div id="prog"></div>
+
+<div class="ch-header" id="sec-storeroom">
+  <p class="ch-book">猫族将軍道 &middot; Book One</p>
+  <p class="ch-eyebrow">Chapter 5</p>
+  <h2 class="ch-title">Recovery; <span style="font-style:italic;font-family:'EB Garamond',serif;text-transform:none;letter-spacing:.04em;">or,</span> Rescue?</h2>
+</div>
+
+<div class="reader-bar" id="reader-bar" aria-label="Reading preferences">
+  <span class="rb-status"><b id="rb-section">The Storeroom</b> &nbsp;&middot;&nbsp; <span id="rb-pct">0%</span></span>
+  <div class="rb-group"><span class="rb-cap">Size</span><button class="rb-btn" id="sz-dn" title="Smaller text">A&minus;</button><button class="rb-btn" id="sz-rs" title="Default text size">A</button><button class="rb-btn" id="sz-up" title="Larger text">A+</button></div>
+  <div class="rb-group"><span class="rb-cap">Font</span><button class="rb-btn" data-font="garamond" title="Garamond (serif)">G</button><button class="rb-btn" data-font="sans" title="Sans-serif">S</button><button class="rb-btn" data-font="mono" title="Monospace">M</button></div>
+  <div class="rb-group"><span class="rb-cap">Links</span><button class="rb-btn" id="lk-on" title="Show character links">On</button><button class="rb-btn" id="lk-off" title="Hide character links">Off</button></div>
+  <div class="rb-group"><span class="rb-cap">Lang</span><button class="rb-btn" data-lang="en" title="English">EN</button><button class="rb-btn" data-lang="jp" disabled title="Japanese &mdash; coming soon">JP</button><button class="rb-btn" data-lang="fr" disabled title="French &mdash; coming soon">FR</button><button class="rb-btn" data-lang="es" disabled title="Spanish &mdash; coming soon">ES</button><button class="rb-btn" data-lang="de" disabled title="German &mdash; coming soon">DE</button><button class="rb-btn" data-lang="it" disabled title="Italian &mdash; coming soon">IT</button></div>
+</div>
+
+
+<main class="prose">
+<p>The provisions room off the east hangar kept the cool of stone no matter the turn, and Yamaneko moved through it the way he moved through everything, which was without hurry and without a single wasted step. He set the things they would carry on the bench in the order he would want them: water, the field rations that asked nothing of you, the small case of remedies that he hoped to bring home as full as it left. He did not pack for the fight. He packed for the long quiet on either side of it, which was the part that actually used a person up.</p>
+
+<p>Yuki leaned against the doorframe, arms folded, boots crossed at the ankle, watching him pack — and spied the old bottle on the shelf above the bench. She stepped in and pawed it down off its place before he could decide whether it was coming.</p>
+
+<p>"This one," she said, turning it to the lamp so the dark of it caught the light. "You've had this one since before I could reach the shelf. I have <em>watched</em> you not drink this bottle for a dozen ages." She set it down in front of him, square, the way you lay a card you are sure of. "It's going to outlive the both of us. Somewhere there's an Usagijin vintner weeping that the finest thing his line ever made is being held hostage by a brooding Nekojin who drinks <em>water.</em>"</p>
+
+<p>"It keeps," Yamaneko said.</p>
+
+<p>"It keeps." She said it back to him flat, marvelling at the uselessness of it. "It keeps for <em>what,</em> Yama. There is no turn coming that is better than a turn you are alive to open it. That's the whole — that is the entire problem with you. You're saving the good thing for a version of yourself that's just going to keep saving it." She picked it up again. "Pour me one and I'll prove a point."</p>
+
+<p>"Proving you can empty a glass is a point no one in this palace would dispute," Yama remarked, reaching for the vintage. She feigned a little motion to tuck it away, then relinquished it with an exaggerated pout.</p>
+
+<p>He took the bottle out of her hand, not quickly, and set it back on the shelf where it had stood, and reached past it for the water flask, and filled it, and capped it, and the small business of his hands was its own complete answer and asked for no other.</p>
+
+<p>And the room knew the rest of it, the way the whole house knew it and had never once said it, and Yuki knew it best of all, which was exactly why she was allowed to be the one who poked at the edge of the thing — because the poking, in her, was the opposite of cruelty. It was the only way she had ever found to lay her hand on a grief that did not belong to her and would not be moved and would never, in all the ages left to either of them, be set down. You could not comfort Yamaneko. He would not permit it; it was the one duty he held over himself and let nothing relieve. But you could needle him. You could make the old wound the butt of a small warm joke in a storeroom, and he would take it, because taking it was of a piece with everything else he would not put down.</p>
+
+<p>She crossed to him and laid her hand on his arm, just above the wrist, and the joke went out of her face and left only what the joke had been carrying the whole time.</p>
+
+<p>He looked at her hand, and then at her, and the thing he did with his mouth was not quite a smile and was unmistakably one, and was for her.</p>
+
+<p>"Come on, old man," she said, soft. "Let's go get your scholar."</p>
+
+<p>He caught her eye before they went, and held it until he was sure she had it. "It would be best if I spoke first. They will be startled at our arrival — and your diplomacy is still…" the pause was its own small needle, handed back to her "…evolving."</p>
+
+<p>She gave him a look that promised nothing, which was the most honest answer she had.</p>
+
+<p>The air split for the fraction of a beat that it took, and pushed them through to the other side.</p>
+
+
+<div class="section-break" id="sec-ship"><span>THE SHIP</span></div>
+
+<p>Feelon's ship met them with the wrong silence.</p>
+
+<p>It was a fine vessel — an Usagizoku make of refined quality, a banking House's idea of comfort, opulent and serene in a warren-like personal vessel. It should have hummed with the daily business of staff and crew.</p>
+
+<p>The sudden arrival of a Rip is always a startling thing to those who host the destination. The expected alarm became their own when their senses caught up with the reality in front of them. There was no steward asking their pardon before they had finished arriving.</p>
+
+<p>Instead, along the plush, woven runner that carried the feet of inquisitive scholars the length of the cabin, two of Feelon's security disassembled in a sea of blood where they had been left.</p>
+
+<p>The hand that had brought their demise belonged to a Lycan adorned in a sickly mauve hued armor, broad through the shoulder, a thing built to end discussions, his disheveled ebony mane carrying the claret of his inquisition, a pair of sai at his belt and one of them already in his fist. A third Usagi steward hung in his grip, held up to be spoken to.</p>
+
+<p>He had not turned the sai on the ship. A Weapon that could open a sealed cabin could open the hull behind it — and a ship is a dense tangle of wire and conduit and structure where a single errant stroke could kill the vessel and everyone breathing inside it. A man who knew what the void did to a room did not draw steel on a ship he meant to walk out of. So he had done it the old way, with his hands, and the runner showed what the old way cost.</p>
+
+<p>"I have all the chord in the world, and you have—"</p>
+
+<p>The air tore behind him.</p>
+
+<p>His head turned to his shoulder, his gaze cast over it, instant — there was no mistaking that sound, not for one of the few in all creation who could make it, and no mistaking what it meant, because no ally would be coming here. He ran the steward through with the sai and let the body fall, the prize gone worthless the instant a Weapon arrived at his back, and turned to confront the thing that had.</p>
+
+<p>Yama's one word set the tone for the beats to come. "Duuk!"</p>
+
+<p>He knew the blade at the general's belt for what it was — Conquest, one of the four pillars of inevitability, the tetrad of bearer-legend that no one living had ever counted whole, their resting places a deeper mystery still. To stand before even one of them was a thing most bearers went their whole lives without.</p>
+
+<p>It sparked motion in Yuki. She lunged forward in haste, Jinsei's green glow radiating along the empty shelves, the blade restraining its full length to accommodate the risks Duuk was also avoiding.</p>
+
+<p>She had never in her life waited to be told what she was looking at. And she was good — a rival for those thrice her ages, and as always with Yuki, it was not her skill that would fail her. Her impatience cost her again. So eager to eliminate the morbid executioner, she slipped from her awareness of the fight and also on one of the many scrolls and books that littered the deck, landing her in an uncomfortable collision with the bare shelves and her pride.</p>
+
+<p>Duuk did not waste it. A captive Princess was worth a great deal more than a dead one, or a frightened Usagijin, and he was quick enough to know it in the instant — quicker still to know he need not win the room to have her, only to take her and rip away. He stepped into her ruined balance and brought the hilt around and pommelled her behind the ear, delaying her recovery further — not out of the fight for long, but long enough to steal away with her. A prize far greater than anything the scholar could give him.</p>
+
+<p>Yamaneko struck at that very moment.</p>
+
+<p>He did not arrive the way she had, all line and intention. He arrived the way weather arrives. There was no single blow to point to afterward and call the one that mattered; there was a sudden economy of motion in the space Duuk occupied, close and constant and giving him nothing to set against — and the swing cut deep, if you could call it a cut. It was a gouge, a canyon in the flesh of Duuk's chest that reached into his arm, releasing his grip on the sai in that hand. The clattering of it striking the blood-soaked runner was doubly muffled — by the carpet, and also by Duuk reacting vocally to being struck.</p>
+
+<p>The cold general made a sound. The man who had grumbled at his foul luck a breath ago cried out, because Mujo did not wound the way a blade wounds; it unmade what it passed through, and a thing that has been unmade is not cut, it is simply, raggedly, no longer there.</p>
+
+<p>Duuk gave ground. He — who was a general, who did not lose — gave ground, with the prize torn back out of his reach in the same breath that opened his chest. He weighed it the way such men weigh things, fast and without feeling: Yamaneko and Mujo full in the fight and on the attack, his Conquest split in two and unreachable, nothing in his grasp that he came for, a golden opportunity lost. He could not have seen this coming, now bitter with defeat. He came for prey, and he would leave with a debt to be repaid and a Weapon to recover. Rex would demand a reckoning.</p>
+
+<p>Leaving with less than nothing, half a Weapon in hand, he spat at the Nekozoku, set the dimension open, and slipped away.</p>
+
+<p>What he left behind lay inert on the stained carpet where it had fallen — the other half of his symbiotic Conquest, lifeless in no hand at all, part of his own self, abandoned a prisoner.</p>
+
+
+<div class="section-break" id="sec-cabin"><span>THE CABIN</span></div>
+
+<p>Yuki was already getting up, which was its own answer, and she was <em>furious,</em> which was a better one — fury was the sound her pride made when it was only bruised. She came up spitting half a curse, a hand to her temple, her other palm flat among the ruined book she had not seen and would never forgive.</p>
+
+<p>Yamaneko crossed to her and put his hand down, open, and she took it and let him bring her to her feet, and he did not say <em>you did not check your footing,</em> because the floor had said it, and there is no use waking a person who is fully alert.</p>
+
+<p>What he said was, "You want a drink?"</p>
+
+<p>It startled the curse off her tongue. It was so exactly wrong, and so exactly <em>theirs,</em> the joke turned around and handed back to her over a body-strewn floor by the one man in the galaxy who would never take it himself — and it broke the fury the way only the right foolishness can, all at once, into something that was nearly a laugh and was at least no longer rage.</p>
+
+<p>"Yeah," she said, unsteady, rubbing the side of her head. "Yeah, when this is done, I am due several." She looked at the two who would not be getting up, and the heat went out of it entirely. "Let's get the door." Yuki motioned her hand toward the far end of the cabin. "Probably some in there."</p>
+
+<p>Yamaneko bent and lifted the inert half of the ugly weapon that called itself Conquest from the blood-soaked runner — the prisoner Duuk had left behind. "A hostage Duuk most certainly will seek to be reunited with. We will see him again, likely soon," Yama said, as a matter of fact, to Yuki. It was a dead thing in his hand, and he knew it for one, weighed it and found it only metal, because a Weapon in a hand that is not its wielder's has no life in it at all; the thing that made it Conquest had Ripped away wearing a chest wound. He did not hold it like a prize. Not a blade — a thing the enemy wanted back, and would not be having. He tucked the inert half-weapon in his belt, and faced the sealed cabin, and raised his voice to it, even and carrying.</p>
+
+<p>"Ren."</p>
+
+<p>Yuki crossed and knocked, twice, flat of her fist against the ceramic — a sound, a human sound, the sound of someone on the friendly side of a wall.</p>
+
+<p>For a long moment the ship gave them nothing. Then, beyond the door, the faint murmur of whispers — two voices, low and quick, deciding.</p>
+
+<p>Yuki knocked again, harder.</p>
+
+<p>"Ren, it's Yama."</p>
+
+<p>Then the intercom, very small: <em>"Is… is he gone?"</em></p>
+
+<p>The door slid back on Ren and Feelon both, pressed into the far corner of the cabin where the wall would only let a thing come at them from one direction — the scholar and the banker, folded together in the dark of a room they had sealed against the sound of their own people dying, and for one whole breath their faces were nothing but relief.</p>
+
+<p>It lasted exactly until they remembered who relief had sent.</p>
+
+<p>Yuki watched it happen — watched the warmth drain and a second fear come up under it, slower and worse, because the first fear had been simple and this one was not. Duuk was a clean terror; you ran from Duuk or you died. But the two in the doorway were the crown's own hand, and the crown does not send its own hand across a galaxy to a fugitive's ship to wish a man well. They had been saved. They both understood, in the same sinking instant, that being saved and being <em>fetched</em> were not, this turn, two different things.</p>
+
+<p>Nobody said it. There was nothing to say that would have made it smaller.</p>
+
+<p>Yuki and Yamaneko faced a somewhat different situation than they were expecting. The terror that forced these two men into retreat reshaped this mission into something unfamiliar. They entered the room as Ren and Feelon rose to meet them. They had been sent to retrieve answers, and Ren, if needed. What they arrived at was a slaughter and far more questions.</p>
+
+<p>Ren's hands found the small things to do that frightened hands find. There was a service set on the cabin's grown shelf, and he reached for it, and tried to pour himself something from the decanter, and his hand shook so badly that the rim chattered against the glass and the dark wine went more on the shelf than into it.</p>
+
+<p>Yuki crossed the cabin and steadied his hand.</p>
+
+<p>She did it without thinking and without a word, her fingers closing over his and bringing the decanter level, holding it until the pour was clean — the same girl who let her impatience get the better of her, now showing remarkable patience with the old scholar. The strike and the steadying are the same motion learned from opposite ends, and somewhere in the last chord she had picked up the far end of it.</p>
+
+<p>"Hakase," she said, low, the title gentling the rest. "We're no threat to you. Be at ease." She let go of his hand only when it would hold itself. "My sister is worried about you. And — Hakase, this really does not look good."</p>
+
+<p><em>My sister.</em> It went into the small room and changed the pressure of it. Not a warrant from a faceless office. Not the cold machinery of the crown grinding toward him in the dark. <em>Byakko</em> — who had sat across a table from him a handful of turns ago and let him talk himself out of his own dread, and had not pressed — was <em>worried.</em> It was the kindest thing anyone had said to him in three arcs, and it was also, in the same breath, the whole weight of the throne setting itself down quietly on his shoulders, and he heard both halves of it, the way he had heard both halves of everything since the work began to answer.</p>
+
+<p>Yamaneko had not moved from the doorway. He looked at his old friend with a plain face, still processing the dread that filled his old teacher.</p>
+
+<p>"In all the ages we have known each other, Ren," he said, and there was no anger in it, which was the thing that made it land — only a hurt worn very smooth, "was there nothing you could say to me?" He let that sit. "What have you gotten yourself into?" And softer, the last of it, the part that set the errand down on the floor with the rest of the broken things and picked up the older thing instead: "Old friend."</p>
+
+<p>Ren's composure, what was left of it, went. Not into weeping — into the thing under weeping, the loosening of a man who has been holding a great weight alone precisely so that no one he loved would have to help him carry it, and has just been told, gently, that the holding was the wound.</p>
+
+<p>"There was nothing I <em>could</em> say," he managed, "that would not have put you where I am." He looked at the steady glass in his hand and did not drink from it either, which neither of them remarked. "That was the only kindness I had left to give anyone. I have spent it badly, it seems."</p>
+
+<p>"Tell us the start of it," Yamaneko said. "Not the end. I'm not asking you for the end." The source of the thing, he did not say. Only the spark. "What lit this fire?"</p>
+
+<p>And Ren told them — haltingly, out of order, the way the truly frightened tell a thing, reaching for the harmless words and finding them turned dangerous in his mouth.</p>
+
+<p>"It was <em>ordinary,</em>" he said, as though that were the most monstrous part, and perhaps to him it was. "A commission. A reasonable one. The compensation was fair — generous, even, but not so generous a man would think to look at it twice. A client wished a thing translated, and translation is my work, and I did my work." He turned the untouched glass a slow quarter. "It came as a data crystal. Pre-ancient — those are the oldest things we hold, you understand, we have only ever opened a handful, the rest are simply <em>shut</em> to us, a trillion ages of silence we can hold in the hand and not read. Except this one." His ears, low to begin with, went lower. "This one was not weathered. The oldest object any of us had ever touched, and it looked as though it had been made the turn before last. I told myself there were explanations. I am very good at telling myself there are explanations."</p>
+
+<p>"You ran it," Yamaneko said.</p>
+
+<p>"I ran it. And the algorithm — Yama, the <em>match.</em> Ninety-four. Ninety-four against a grammar we had been begging for fragments of for my entire life, and here it gave itself up nearly whole. I should have been frightened of it then. Instead I was <em>delighted.</em>" The self-disgust in it was very quiet and very total. "I confirmed there were no large untranslated fragments, packaged the result, and turned it over to the client. That is all. That is the entire of what I did. I never read it."</p>
+
+<p>"You never <em>read</em> it," Yuki repeated, and the flatness in her was not doubt — it was the cold understanding arriving. He was hunted for a thing he did not even carry in his own head.</p>
+
+<p>"There was no need to read it. The client did not pay me to read it; they paid me to render it. I checked it for <em>completeness,</em> not for <em>sense.</em>" He spread one trembling hand. "I am being pulled from my den over a document I could not tell you the first line of."</p>
+
+<p>Feelon spoke for the first time, from the corner, and what he said was not to them but to Ren, and it had the sound of a thing already worked through alone in a dark room and only now said aloud.</p>
+
+<p>"The translation itself was nothing," the commissioner said. "I read the summary, Ren showed me the summary, when it all began to — when the letters stopped. It said nothing. Shopkeeping. Inventories, allotments, the schematics of perfectly ordinary things, things any foundry in the nine capitals makes by the gross. There was nothing in the <em>words</em> worth a single drop of blood spilled here this turn." He looked, despite himself, toward where the floor was. "Which is what frightens me past all sense. Who sends a monster to slaughter for an inventory?" The rest of the room had his attention while he reasoned this out loud. "Because it makes sense to someone, and it is not a fool, and it did not come this far for a parts list."</p>
+
+<p>The cabin held that. The danger was not in the document. The document was a parts list. And a general of the DarkPack had killed his way across a banking House's vessel for the man who had handled it.</p>
+
+<p>It was Yuki, in the end, who asked the question that turned the whole of it.</p>
+
+<p>"All right," she said. "This is how I see it. There's a parts list nobody would cross a room for, and Duuk crossed the <em>galaxy</em> for the man who typed it up." She looked between the scholar and the banker. "So what's the part you're not telling us. What was in there that's worth your life — because it isn't the words, you both just said it isn't the words."</p>
+
+<p>And Feelon's face did a thing, a small terrible arithmetic, the exact look of a banker who has just seen a column come out wrong in a way that means more than money. He turned to Ren, and his voice when it came was almost pleading.</p>
+
+<p>"By the bells of the Warren, Ren, tell me you kept no copy!"</p>
+
+<p>Ren looked at him, and did not understand, and the not-understanding was its own answer.</p>
+
+<p>"Of course I kept a copy," he said. "The Library keeps a copy. It is in the <em>fee,</em> Feelon — every commission, the original goes to the client and a record stays with the Library, that has been the arrangement since before either of us drew breath. It is not even a decision. It is <em>procedure.</em> I keep one of everything I have ever rendered." He read their faces, one to the next, and the last of his color went. "I do it with all the ancient data. I have always done it with all the ancient data. It is the most ordinary thing in my—"</p>
+
+<p>"Where," Yamaneko said.</p>
+
+<p>"Not here." Ren's hand closed over the glass he would not drink. "I am not a fool in <em>every</em> particular. I do not carry it. It is somewhere no one would think to look, and it is safe where it is. That much I have managed."</p>
+
+<p>And there it was, laid in the middle of the cabin among the spilled wine and the spilled blood: not a man being hunted to be silenced, but a man being hunted to be <em>opened</em> — because somewhere, in a place only Ren knew, sat the one other copy in creation of a thing a creature like Duuk would empty a ship to own, and the client who thought they held the only key had just been proven wrong by the most ordinary habit in the scholar's trade.</p>
+
+<p>Yamaneko looked at his old friend for a long moment, and then he did the only thing the moment still had room for. He did not ask where the copy was. Not here, not on this floor, not with two of Feelon's people cooling at the door and a general nursing a chest wound somewhere out in the dark already deciding when to come back.</p>
+
+<p>"You'll tell the Queen," he said. "Not me. Not here. You'll tell Byakko, all of it, the part you've told us and the part you haven't and the part you don't yet know you know. She'll hear it whole, and she'll know what to do with it, which is more than either of us can say standing in it." He held out his hand. "Come home, Ren. You've carried this far enough alone to prove whatever you were trying to prove. Let it down now."</p>
+
+<p>Ren looked at the offered hand for a long time. Then he set the untouched glass on the shelf, very precisely, the way a careful man leaves a room he does not expect to see again, and he took it.</p>
+
+<p>Feelon did not move from his corner, and when Yuki turned to him he was already shaking his head, gently, a banker declining a transaction.</p>
+
+<p>"My ship," he said. "My crew. My dead. I'll not have it said a House man ran twice." But it was not only the pride, and the steadiness in him now came from somewhere other than nerve — it came from the column finally adding up. "And there is the simpler arithmetic. With Ren gone, and that —" he nodded at the dead half-Weapon at Yamaneko's belt "— gone with him, there is nothing on this vessel any creature in the dark would cross the room for. I am worth less than the fuel in her, the moment you leave. The safest place in the galaxy for a frightened banker, Commander, is a ship that no longer holds a single thing worth taking." A thin attempt at his old wine-warm manner, badly frayed. "I shall sit here with my dead and be gloriously, unprofitably safe. Go. Take him to your Queen."</p>
+
+<p>There was a look, then, between the scholar and the banker — the two who had run together, sealed the door together, listened to the same killing through the same wall. Neither of them made it into words. Ren inclined his silver head, low, the bow of a man to the friend who had spent a career to buy him a single arc of road, and Feelon returned it, and that was the whole of the goodbye, and it was enough.</p>
+
+<p>Yamaneko set his hand on Ren's shoulder and Ren stepped in close for the crossing, and the sai went with them, and the witness went with them, and everything in the long quiet ship that Duuk might have wanted left in the same tearing breath.</p>
+
+<p>The air seized from behind and hauled them inward, and they were gone, the three of them, home toward the palace and the Queen who was worried — and behind them the <em>Usagi</em> vessel drifted on, lit and emptied and harmless at last, carrying nothing now but a banker and his grief and two of his people who would not be queuing for any ship again.</p>
+</main>
+
+<nav class="chapter-nav">
+  <a href="chapter_four.html" class="cn-link cn-prev"><span class="cn-dir">&larr; Previous</span><span class="cn-name">Chapter 4 &middot; Oumura</span></a>
+  <a href="chapter_six.html" class="cn-link cn-next"><span class="cn-dir">Next &rarr;</span><span class="cn-name">Chapter 6 &middot; Leerma</span></a>
+</nav>
+
+<footer>
+  <p>Nekozoku Shōgundō &nbsp;·&nbsp; Alexis Littlepaws &nbsp;·&nbsp; 猫族将軍道</p>
+  <p style="margin-top:7px;font-size:.88em;">The author used AI to research and verify scientific truths related to this literary work.<br>Brief passages have been generated by AI and heavily edited by the author.<br>AI has organized and maintained all canonical information and documents related to the work.</p>
+</footer>
+
+<!-- Character Card Lightbox -->
+<div id="char-lightbox" onclick="closeCharCard()" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(4,4,10,.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;cursor:pointer;">
+  <div style="position:relative;max-width:420px;width:90vw;" onclick="event.stopPropagation()">
+    <img id="char-lb-img" src="" style="width:100%;display:block;border:1px solid rgba(200,171,106,.2);box-shadow:0 0 80px rgba(0,0,0,.7);">
+    <div id="char-lb-name" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:#c8ab6a;text-align:center;padding:14px 0 4px;opacity:.8;"></div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#7a6535;text-align:center;letter-spacing:.1em;">click outside to close &nbsp;·&nbsp; esc</div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-link" id="nav-home"><span class="nav-kanji">家</span><span class="nav-label">Home</span></a>
+  <div class="nav-divider"></div>
+  <a href="chapter_five.html" class="nav-link active" id="nav-chapter"><span class="nav-kanji">五</span><span class="nav-label">Chapter 5</span></a>
+  <div class="nav-divider"></div>
+  <a href="cosmos.html" class="nav-link" id="nav-cosmos"><span class="nav-kanji">宇</span><span class="nav-label">Cosmos</span></a>
+  <div class="nav-divider"></div>
+  <a href="library.html" class="nav-link" id="nav-library"><span class="nav-kanji">蔵</span><span class="nav-label">Library</span></a>
+</nav>
+
+<a href="#" id="btt" title="Back to top">↑</a>
+
+<script>
+const prog=document.getElementById("prog");
+const btt=document.getElementById("btt");
+window.addEventListener("scroll",()=>{
+  const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  prog.style.width=pct+"%";
+  btt.classList.toggle("show",window.scrollY>500);
+},{passive:true});
+btt.addEventListener("click",e=>{e.preventDefault();window.scrollTo({top:0,behavior:"smooth"});});
+
+function openCharCard(name,url){
+  var lb=document.getElementById("char-lightbox");
+  document.getElementById("char-lb-img").src=url;
+  document.getElementById("char-lb-name").textContent=name;
+  lb.style.display="flex";
+  event.preventDefault();
+  event.stopPropagation();
+}
+function closeCharCard(){
+  document.getElementById("char-lightbox").style.display="none";
+}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeCharCard();});
+
+/* ===== Reading preferences + contents (added) ===== */
+(function(){
+  var FAM={garamond:'"EB Garamond",Georgia,serif',sans:'system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',mono:'ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace'};
+  var SIZES=[20,24,28,32], DEFAULT='clamp(20px,1.55vw,26px)';
+  var root=document.documentElement;
+  function curPx(){return parseInt(getComputedStyle(root).getPropertyValue('--prose-size'))||19;}
+  function nearest(px){var b=0;for(var i=1;i<SIZES.length;i++){if(Math.abs(SIZES[i]-px)<Math.abs(SIZES[b]-px))b=i;}return b;}
+  function setSize(px){root.style.setProperty('--prose-size',px+'px');try{localStorage.setItem('nss_fontSize',px+'px');}catch(e){}}
+  document.getElementById('sz-dn').onclick=function(){var i=nearest(curPx());if(i>0)setSize(SIZES[i-1]);};
+  document.getElementById('sz-up').onclick=function(){var i=nearest(curPx());if(i<SIZES.length-1)setSize(SIZES[i+1]);};
+  document.getElementById('sz-rs').onclick=function(){root.style.setProperty('--prose-size',DEFAULT);try{localStorage.removeItem('nss_fontSize');}catch(e){}};
+
+  function markFont(key){document.querySelectorAll('[data-font]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-font')===key);});}
+  function setFont(key){if(!FAM[key])return;root.style.setProperty('--prose-family',FAM[key]);try{localStorage.setItem('nss_fontFamily',key);}catch(e){}markFont(key);}
+  document.querySelectorAll('[data-font]').forEach(function(b){b.onclick=function(){setFont(b.getAttribute('data-font'));};});
+
+  var lkOn=document.getElementById('lk-on'), lkOff=document.getElementById('lk-off');
+  function setLinks(on){root.classList.toggle('links-off',!on);try{localStorage.setItem('nss_links',on?'on':'off');}catch(e){}lkOn.classList.toggle('on',on);lkOff.classList.toggle('on',!on);}
+  lkOn.onclick=function(){setLinks(true);};
+  lkOff.onclick=function(){setLinks(false);};
+
+  document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){if(b.disabled)return;document.querySelectorAll('[data-lang]').forEach(function(x){x.classList.remove('on');});b.classList.add('on');try{localStorage.setItem('nss_lang',b.getAttribute('data-lang'));}catch(e){}};});
+
+  /* reflect saved state into the buttons */
+  (function(){
+    var ff='garamond';try{ff=localStorage.getItem('nss_fontFamily')||'garamond';}catch(e){}markFont(FAM[ff]?ff:'garamond');
+    var lk='on';try{lk=localStorage.getItem('nss_links')||'on';}catch(e){}lkOn.classList.toggle('on',lk!=='off');lkOff.classList.toggle('on',lk==='off');
+    var lg='en';try{lg=localStorage.getItem('nss_lang')||'en';}catch(e){}var el=document.querySelector('[data-lang="'+lg+'"]');(el&&!el.disabled?el:document.querySelector('[data-lang="en"]')).classList.add('on');
+  })();
+
+  /* sections, reading %, current-section tracking */
+  var SEC=[['sec-storeroom','The Storeroom'],['sec-ship','The Ship'],['sec-cabin','The Cabin']];
+  var pctEl=document.getElementById('rb-pct'), secEl=document.getElementById('rb-section');
+  function track(){
+    var max=document.documentElement.scrollHeight-window.innerHeight;
+    var pct=max>0?Math.round(window.scrollY/max*100):0; pct=Math.max(0,Math.min(100,pct));
+    pctEl.textContent=pct+'%';
+    var cur=0, mark=window.scrollY+120;
+    for(var i=0;i<SEC.length;i++){var el=document.getElementById(SEC[i][0]);if(el&&el.getBoundingClientRect().top+window.scrollY<=mark)cur=i;}
+    secEl.textContent=SEC[cur][1];
+  }
+  window.addEventListener('scroll',track,{passive:true});
+  window.addEventListener('resize',track);
+  track();
+})();
+</script>
+</body>
+</html>
